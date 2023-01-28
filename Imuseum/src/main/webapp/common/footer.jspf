@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<footer>
+<div class="container-fulid notosanskr" style="color: white; background-color: black;">
+	<div class="col-8 offset-2">
+		<table style="width: 100%;">
+			<tr>
+				<td style="font-size: 1.5em;">
+				ITWILL<br>
+				CULTURAL<br>
+				FOUNDATION
+				</td>
+				<td style="color: #949494;">
+				<img alt="IMUSEUM" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FblgbLR%2FbtrRnZbrFTZ%2FTwAhSQzHv1k6zpZ7OwWbKK%2Fimg.png">
+				<br>
+				서울특별시 강남구 테헤란로<br>
+				124. 아이뮤지엄<br>
+				T. 02.6255.8092
+				</td>
+				<td>
+				<i class="bi bi-instagram" style="margin-right: 20px; cursor: pointer;" 
+					onclick="location.href='https://www.instagram.com/daelimmuseum/'"></i>
+				<i class="bi bi-youtube" style="cursor: pointer;"
+					onclick="location.href='https://www.youtube.com/user/DaelimMuseum'"></i>
+				<br>
+				<span onclick="location.href='sitemap.do'" style="cursor: pointer;">SITEMAP</span><br>
+				<span onclick="location.href='https://www.mcst.go.kr/'" style="cursor: pointer;">문화체육관광부</span><br>
+				</td>
+			</tr>
+		</table>
+		<hr>
+		<table>
+			<tr>
+				<td style="font-size: 0.9em; color: #949494;">
+				<a href="#" style="color: white; font-weight: bold;">개인정보 처리방침</a> | 
+				<a href="#" style="color: #949494;">이용약관</a><br>
+				<span style="color: white; font-weight: bold;">(주)아이티윌</span> | 대표자: 김동환 | 서울특별시 강남구 서울특별시 강남구 테헤란로 124 4층(역삼동 823) | 사업자등록번호: 172-87-02395<br> 
+				통신판매업신고번호: 강남 제 3339호 | info@itwillmmuseum.org</br>
+				<p style="margin-top: 30px;">© 2022 BY 
+				<span style="color: white; font-weight: bold;">ITWILL CULTURAL FOUNDATION</span>
+				 ALL RIGHT RESERVED.</p>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+</footer>

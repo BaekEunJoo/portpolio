@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="order">
+
+	<insert id="insert" parameterType="com.mystudy.or.VO.orderDetailVO">
+		INSERT INTO ORDER_DETAIL(ORDER_DETAIL_KEY, ORDER_NO, PRODUCT_NO, AMOUNT, TOTAL_PRICE, ORDER_STATUS, ORDER_DATE, OPTION_SIZE)
+		VALUES(ORDER_DETAIL_KEY_SEQ.NEXTVAL, #{orderNo}, #{productNo}, #{amount}, #{total}, '판매완료', SYSDATE, #{optionSize})
+	</insert>
+
+	<select id="select" parameterType="int" resultType="com.mystudy.or.VO.orderDetailVO">
+		SELECT PRODUCT_NO, AMOUNT, TOTAL, OPTION_SIZE
+		FROM CART_LIST
+		WHERE CART_NO = #{cartNo}
+	</select>
+	
+	<select id="orderNoSelect" resultType="int">
+		SELECT ORDER_NO_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+	
+	<update id="optionCountUpdate" parameterType="com.mystudy.or.VO.orderDetailVO">
+		UPDATE PRODUCT_OPTION
+		SET OPTION_COUNT = #{optionCount}
+		WHERE OPTION_SIZE = #{optionSize}
+		AND PRODUCT_NO = #{productNo}
+	</update>	
+	
+	<select id="optionCountSelect" parameterType="com.mystudy.or.VO.orderDetailVO" resultType="int">
+		SELECT OPTION_COUNT FROM PRODUCT_OPTION
+		WHERE OPTION_SIZE = #{optionSize}
+		AND PRODUCT_NO = #{productNo}
+	</select>
+	
+	<insert id="orderMainInsert" parameterType="com.mystudy.or.VO.orderDetailVO">
+		INSERT INTO ORDER_MAIN(ORDER_NO, USER_ID)
+		VALUES (#{orderNo}, #{userId})
+	</insert>
+	
+	<delete id="cartDelete">
+		DELETE FROM CART
+		WHERE USER_ID = #{userId}
+	</delete>
+	
+</mapper>

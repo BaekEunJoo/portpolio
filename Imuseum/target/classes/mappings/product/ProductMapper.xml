@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.Imuseum.product.dao.ProductDAO">
+
+<!-- 	<select id="getProductList_search" parameterType="product" resultType="product">
+		SELECT * 
+		FROM PRODUCT 
+		WHERE 1=1  
+		<if test="searchCondition == 'PRODUCTNAME'">
+			AND PRODUCT_NAME LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'PRODUCTCONTENT'">
+			AND PRODUCT_CONTENT LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		ORDER BY PRODUCT_NUM DESC 
+	</select> -->
+	
+	<select id="getProductList" parameterType="product" resultType="product">
+		SELECT PRODUCT_NUM, ID, CATEGORY, PRODUCT_NAME, PRODUCT_CONTENT,
+		REGDATE, EXISTENCE, 
+		PHOTO1, PHOTO2, PHOTO3, PHOTO4, TO_CHAR(PRICE, 'FM999,999,999,999') AS PRICE 
+		FROM PRODUCT 
+		ORDER BY PRODUCT_NUM DESC 
+	</select>
+	
+	<select id="getProduct" parameterType="product" resultType="product">
+		SELECT PRODUCT_NUM, ID, CATEGORY, PRODUCT_NAME, PRODUCT_CONTENT,
+		REGDATE, EXISTENCE, 
+		PHOTO1, PHOTO2, PHOTO3, PHOTO4, PRICE, DISCOUNT 
+		FROM PRODUCT WHERE PRODUCT_NUM = #{productnum} 
+	</select>
+	
+	<insert id="insertProduct" parameterType="product">
+		INSERT INTO PRODUCT (PRODUCT_NUM, ID, CATEGORY, PHOTO1, PHOTO2, PHOTO3, PHOTO4, PRODUCT_NAME, PRICE,
+				PRODUCT_CONTENT, DISCOUNT) 
+		VALUES ((SELECT NVL(MAX(PRODUCT_NUM),0) + 1 FROM PRODUCT), 'admin', #{category}, #{photo1}, #{photo2}, #{photo3}, #{photo4}, #{productname}, #{price},
+		#{productcontent}, #{discount})
+	</insert>
+	
+	<delete id="deleteProduct" parameterType="product">
+		DELETE FROM PRODUCT WHERE PRODUCT_NUM = #{productnum} 
+	</delete>
+	
+	<update id="updateProduct" parameterType="product">
+		UPDATE PRODUCT 
+		SET CATEGORY = #{category},
+			PRODUCT_NAME = #{productname},
+			PRICE = #{price},
+			DISCOUNT = #{discount}
+		WHERE PRODUCT_NUM = #{productnum} 
+	</update>
+	
+	<select id="getGoodsList" parameterType="product" resultType="product">
+		SELECT PRODUCT_NUM, ID, CATEGORY, PRODUCT_NAME, PRODUCT_CONTENT,
+		REGDATE, EXISTENCE, 
+		PHOTO1, PHOTO2, PHOTO3, PHOTO4, PRICE, DISCOUNT  
+		FROM PRODUCT 
+		WHERE CATEGORY = 'EXHIBITION GOODS' 
+		ORDER BY PRODUCT_NUM DESC 
+	</select>
+	
+	<select id="GoodsSort" parameterType="product" resultType="product">
+		SELECT PRODUCT_NUM, ID, CATEGORY, PRODUCT_NAME, PRODUCT_CONTENT, 
+		REGDATE, EXISTENCE, 
+		PHOTO1, PHOTO2, PHOTO3, PHOTO4, PRICE, DISCOUNT
+		FROM PRODUCT 
+		WHERE CATEGORY = 'EXHIBITION GOODS' 
+		ORDER BY PRICE DESC 
+	</select>
+	
+	<select id="GoodsAsc" parameterType="product" resultType="product">
+		SELECT PRODUCT_NUM, ID, CATEGORY, PRODUCT_NAME, PRODUCT_CONTENT, 
+		REGDATE, EXISTENCE, 
+		PHOTO1, PHOTO2, PHOTO3, PHOTO4, PRICE, DISCOUNT
+		FROM PRODUCT 
+		WHERE CATEGORY = 'EXHIBITION GOODS' 
+		ORDER BY PRICE ASC 
+	</select>
+	
+	<select id="getEditionsList" parameterType="product" resultType="product">
+		SELECT PRODUCT_NUM, ID, CATEGORY, PRODUCT_NAME, PRODUCT_CONTENT,
+		REGDATE, EXISTENCE,
+		PHOTO1, PHOTO2, PHOTO3, PHOTO4, PRICE, DISCOUNT  
+		FROM PRODUCT  
+		WHERE CATEGORY = 'EDITIONS' 
+		ORDER BY PRODUCT_NUM DESC 
+	</select>
+	
+	<select id="EditionsSort" parameterType="product" resultType="product">
+		SELECT PRODUCT_NUM, ID, CATEGORY, PRODUCT_NAME, PRODUCT_CONTENT,
+		REGDATE, EXISTENCE,
+		PHOTO1, PHOTO2, PHOTO3, PHOTO4, PRICE, DISCOUNT 
+		FROM PRODUCT  
+		WHERE CATEGORY = 'EDITIONS' 
+		ORDER BY PRICE DESC 
+	</select>
+	
+	<select id="EditionsAsc" parameterType="product" resultType="product">
+		SELECT PRODUCT_NUM, ID, CATEGORY, PRODUCT_NAME, PRODUCT_CONTENT,
+		REGDATE, EXISTENCE,
+		PHOTO1, PHOTO2, PHOTO3, PHOTO4, PRICE, DISCOUNT 
+		FROM PRODUCT  
+		WHERE CATEGORY = 'EDITIONS' 
+		ORDER BY PRICE ASC  
+	</select>
+	
+	
+	<!-- 옵션 -->
+	<select id="getOption" parameterType="product" resultType="productOption">
+		SELECT O.*
+		FROM PRODUCT P, PRODUCT_OPTION O WHERE P.PRODUCT_NUM = O.PRODUCT_NUM 
+        AND   O.PRODUCT_NUM = #{productnum}  
+	</select>
+	
+	<delete id="deleteOption" parameterType="productOption">
+		DELETE FROM PRODUCT_OPTION WHERE OPTION_NUM = #{optionnum} 
+	</delete>
+	
+	<select id="getOptionList" parameterType="productOption" resultType="productOption">
+		SELECT OPTION_NUM, OPTION_NAME, CNT, PRODUCT_NUM 
+		FROM PRODUCT_OPTION  
+		WHERE PRODUCT_NUM = #{productnum}  
+	</select>
+	
+	<insert id="insertOption" parameterType="productOption">
+		INSERT INTO PRODUCT_OPTION (OPTION_NUM, OPTION_NAME, CNT, PRODUCT_NUM) 
+		VALUES ((SELECT NVL(MAX(OPTION_NUM),0) + 1 FROM PRODUCT_OPTION), REPLACE(#{optionname}, ',', ''), #{cnt}, #{productnum})
+	</insert>
+	
+	<update id="updateOption" parameterType="productOption">
+		UPDATE PRODUCT_OPTION 
+		SET OPTION_NAME = #{optionname},
+			CNT = #{cnt}
+		WHERE OPTION_NUM = #{optionnum}  
+	</update>
+	
+	<!-- 리뷰 -->
+	<select id="getReview" parameterType="product" resultType="adminReview">
+		SELECT R.*
+		FROM PRODUCT P, PRODUCT_REV R WHERE P.PRODUCT_NUM = R.PRODUCT_NUM 
+        AND  R.PRODUCT_NUM = #{productnum}  
+	</select>
+	
+	<select id="getReviewList" parameterType="adminReview" resultType="adminReview">
+		SELECT * 
+		FROM PRODUCT_REV 
+		ORDER BY PR_NUM DESC 
+	</select>
+	
+	<delete id="deleteReview" parameterType="adminReview">
+		DELETE FROM PRODUCT_REV WHERE PR_NUM = #{prnum} 
+	</delete>
+	
+	<!-- 문의 -->
+	<select id="getProductQna" parameterType="product" resultType="productQna">
+		SELECT *
+		FROM PRODUCT P, PRODUCT_QNA Q, PQNA_TYPE T WHERE P.PRODUCT_NUM = Q.PRODUCT_NUM AND T.TYPE_NUM = Q.TYPE_NUM 
+        AND  Q.PRODUCT_NUM = #{productnum}
+	</select>
+	
+	<select id="getProductQnaList" parameterType="productQna" resultType="productQna">
+		SELECT T.*, Q.* 
+		FROM PRODUCT_QNA Q, PQNA_TYPE T  WHERE T.TYPE_NUM = Q.TYPE_NUM
+		ORDER BY PQNA_NUM DESC
+	</select> 
+	
+	<delete id="deleteQna" parameterType="productQna">
+		DELETE FROM PRODUCT_QNA WHERE PQNA_NUM = #{pqnanum} 
+	</delete>
+	
+<!-- 	<select id="getQna" parameterType="productQna" resultType="productQna">
+		SELECT * 
+		FROM PRODUCT_QNA WHERE PQNA_NUM = #{pqnanum}
+	</select> -->
+	
+	<select id="getQna" parameterType="productQna" resultType="productQna">
+		SELECT *
+		FROM PRODUCT_QNA Q, PQNA_TYPE T WHERE Q.TYPE_NUM = T.TYPE_NUM AND Q.PQNA_NUM = #{pqnanum} 
+	</select>
+	
+	<update id="updateAnswer" parameterType="productQna">
+		UPDATE PRODUCT_QNA 
+		SET ANSWER = #{answer}
+		WHERE PQNA_NUM = #{pqnanum}   
+	</update>
+	
+<!-- 상품문의 INSERT 2022-12-15 -->
+	<insert id="insertProductQna" parameterType="productQna">
+		INSERT INTO PRODUCT_QNA (PQNA_NUM, PRODUCT_NUM, ID, TYPE_NUM, QUESTION)
+		VALUES ((SELECT NVL(MAX(PQNA_NUM),0) + 1 FROM PRODUCT_QNA), #{productnum}, #{id}, #{typenum}, #{question})
+	</insert>
+</mapper>
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <p class="py-5"></p>
+	<div>
+		<ul id="QAPagingButton" class="pagination justify-content-center">
+			<%--[1페이지로]에 대한 사용여부 처리 --%>
+			<c:if test="${pq.beginPage == 1 }">
+				<li class="page-item disabled"><a class="pqitems page-link text-body">**</a></li>
+			</c:if>
+			<c:if test="${pq.beginPage != 1 }">
+				<li class="page-item">
+					<a class="pqitems page-link text-body" value="1">
+						**
+					</a>
+				</li>
+			</c:if>
+			
+			<%--[이전으로]에 대한 사용여부 처리 --%>
+			<c:if test="${pq.beginPage == 1 }">
+				<li class="page-item disabled"><a class="pqitems page-link text-body">pre</a></li>
+			</c:if>
+			<c:if test="${pq.beginPage != 1 }">
+				<li class="page-item">
+					<a class="pqitems page-link text-body" value="${pq.beginPage - 1 }">
+						pre
+					</a>
+				</li>
+			</c:if>
+			
+			<%-- 블록내에 표시할 페이지 태그 작성(시작페이지~끝페이지) --%>
+			
+			<c:forEach var="pageNo" begin="${pq.beginPage }" end="${pq.endPage }">
+				<c:if test="${pageNo == pq.nowPage }" >	
+					<li class="page-item disabled">
+					<a class="pqitems page-link text-body font-weight-bold">${pageNo }</a></li>
+				</c:if>
+				<c:if test="${pageNo != pq.nowPage }">
+					<li class="page-item">
+						<a class="pqitems page-link text-body" value="${pageNo }">${pageNo }</a>
+					</li>					
+				</c:if>
+			
+			</c:forEach>	
+				
+				
+			<%--[다음으로]에 대한 사용여부 처리 --%>
+			<c:if test="${pq.endPage >= pq.totalPage }">
+				<li class="page-item disabled">
+					<a class="pqitems page-link text-body">nex</a></li>
+			</c:if>					
+			<c:if test="${pq.endPage < pq.totalPage }">
+				<li class="page-item">
+					<a class="pqitems page-link text-body" value="${pq.endPage + 1 }">
+						nex
+					</a>
+				</li>
+			</c:if>
+					
+			<%--[마지막으로]에 대한 사용여부 처리 --%>
+			<c:if test="${pq.endPage >= pq.totalPage }">
+				<li class="page-item disabled">
+					<a class="pqitems page-link text-body">**</a></li>
+			</c:if>
+			<c:if test="${pq.endPage < pq.totalPage }">
+				<li class="page-item">
+					<a class="pqitems page-link text-body" value="${pq.totalPage }">
+						**
+					</a>
+				</li>
+			</c:if>					
+		</ul>
+	</div>
+    <p class="py-3"></p>

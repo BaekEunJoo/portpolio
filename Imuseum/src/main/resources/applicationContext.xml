@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- base-package 여러개 선언 방식 
+	<context:component-scan base-package="com.spring.biz.board" />
+	<context:component-scan base-package="com.spring.biz.user" />
+	-->
+	
+	<!-- base-package 설정위치 포함 하위 패키지 모두 검색처리
+		구분 사용 나열(빈칸, 콤마, 세미콜른 등) -->
+		
+	<!-- 태우 -->
+	<context:component-scan base-package="com.spring.Imuseum.learn" />
+	
+	<!-- 동환 -->
+	<context:component-scan base-package="com.spring.Imuseum.member" />
+	<context:component-scan base-package="com.spring.Imuseum.qnaBoard" />
+	<!-- 네이버 로그인 VO Bean 설정 -->
+	<bean id="naverLoginBO" class="com.spring.Imuseum.member.NaverLoginBO" />	
+	<!-- 구글 프로퍼티 -->
+	<context:property-placeholder location="/WEB-INF/config/config.properties" />
+	
+
+	<!-- 현준 -->
+	<context:component-scan base-package="com.spring.Imuseum.product" />
+	
+	<!-- 소연 -->
+	<context:component-scan base-package="com.spring.Imuseum.order" />	
+		
+	<!-- 다은 -->
+	<context:component-scan base-package="com.spring.Imuseum.exhibition" />
+	<context:component-scan base-package="com.spring.Imuseum.ticket" />
+	<context:component-scan base-package="com.spring.Imuseum.admin" />
+	
+	<!-- 은주 -->
+	<context:component-scan base-package="com.spring.Imuseum.mypage" />
+	<context:component-scan base-package="com.spring.Imuseum.notice" />
+	
+	<!-- === Spring JDBC 관련 설정 ========= -->
+	<!-- DataSource 설정 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+			destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@192.168.18.13:1521:xe" />
+		<!-- <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" /> -->
+		<property name="username" value="IMUSEUM"/>
+		<property name="password" value="imuseum" />
+	</bean>
+
+	<!-- 스프링JDBC : JdbcTemplate 객체 생성 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 구글 프로퍼티-->
+	
+	<!-- =============================== -->
+	<!-- 스프링-마이바티스 연동 설정 -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:mappings/**/*Mapper.xml"></property>
+	</bean>
+	
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- Mapper 인터페이스 사용 방식 적용 -->
+	<mybatis-spring:scan base-package="com.spring.Imuseum.**.dao"/> 
+
+
+</beans>

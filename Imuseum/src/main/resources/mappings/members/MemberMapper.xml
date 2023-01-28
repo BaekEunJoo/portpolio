@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.Imuseum.member.dao.MemberDAO">
+
+	<select id="getMember" parameterType="member"
+		resultType="member">
+		SELECT M.*,S.SNS_NAME,T.STATUS_VALUE
+		FROM MEMBER M, SNS_TYPE S,MEMBER_STATUS T
+		WHERE M.SNS_TYPE = S.SNS_TYPE
+		AND M.STATUS = T.STATUS 
+		AND ID = #{id} AND PASSWORD = #{password}
+	</select>
+	
+	<select id="getMemberById" parameterType="member"
+		resultType="member">
+		SELECT M.*,S.SNS_NAME,T.STATUS_VALUE
+		FROM MEMBER M, SNS_TYPE S, MEMBER_STATUS T
+		WHERE M.SNS_TYPE = S.SNS_TYPE 
+		AND M.STATUS = T.STATUS
+		AND ID = #{id}
+		AND NOT M.STATUS IN(2,3)
+	</select>
+	<select id="getMemberForAdmin" parameterType="member"
+		resultType="member">
+		SELECT M.*,S.SNS_NAME,T.STATUS_VALUE
+		FROM MEMBER M, SNS_TYPE S, MEMBER_STATUS T
+		WHERE M.SNS_TYPE = S.SNS_TYPE 
+		AND M.STATUS = T.STATUS
+		AND ID = #{id}
+	</select>			
+	
+	<select id="getMemberAllCount" resultType="int">
+        SELECT COUNT(*) 
+        	FROM (
+	                SELECT M.*,T.STATUS_VALUE,S.SNS_NAME 
+	                FROM MEMBER M, SNS_TYPE S,MEMBER_STATUS T
+	                WHERE M.SNS_TYPE = S.SNS_TYPE 
+	                AND M.STATUS = T.STATUS        
+        )		
+	
+	</select>
+	<select id="getMemberAll" parameterType="map" resultType="member">
+		SELECT *
+		    FROM(SELECT ROWNUM RN, A.*
+		            FROM(
+                            SELECT M.*,T.STATUS_VALUE,S.SNS_NAME 
+                            FROM MEMBER M, SNS_TYPE S,MEMBER_STATUS T
+                            WHERE M.SNS_TYPE = S.SNS_TYPE 
+                            AND M.STATUS = T.STATUS
+		            ) A
+		        )
+		WHERE RN BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<select id="idCheck" parameterType="member"
+		resultType="member">
+		SELECT * FROM MEMBER 
+		WHERE ID = #{id}
+		AND NOT STATUS IN(2,3)
+	</select>
+	
+	<select id="findIdByPhone" parameterType="member" resultType="member">
+		SELECT ID FROM MEMBER
+		WHERE NAME = #{name}
+		AND PHONE = #{phone}
+		AND NOT STATUS IN(2,3)
+	</select>	
+	
+	<select id="findIdByBirth" parameterType="member" resultType="member">
+		SELECT ID FROM MEMBER
+		WHERE NAME = #{name}
+		AND BIRTH = #{birth}
+		AND NOT STATUS IN(2,3)
+	</select>	
+	
+	<select id="findPasswordByPhone" parameterType="member" resultType="member">
+		SELECT PASSWORD FROM MEMBER
+		WHERE NAME = #{name}
+		AND ID = #{id}
+		AND PHONE = #{phone}
+		AND NOT STATUS IN(2,3)
+	</select>	
+	<select id="findPasswordByBirth" parameterType="member" resultType="member">
+		SELECT PASSWORD FROM MEMBER
+		WHERE NAME = #{name}
+		AND ID = #{id}
+		AND BIRTH = #{birth}
+		AND NOT STATUS IN(2,3)
+	</select>	
+	<select id="findPasswordByEmail" parameterType="member" resultType="member">
+		SELECT PASSWORD FROM MEMBER
+		WHERE NAME = #{name}
+		AND ID = #{id}		
+		AND EMAIL = #{email}
+		AND NOT STATUS IN(2,3)
+	</select>	
+			
+	<insert id="joinMember" parameterType="member">
+		INSERT INTO MEMBER (ID,PASSWORD,NAME,EMAIL,BIRTH,PHONE,SNS_TYPE)
+		VALUES(#{id},#{password},#{name},#{email},#{birth},#{phone},#{snsType})
+	</insert>
+	
+	<insert id="joinMemberKakao" parameterType="member">
+		INSERT INTO MEMBER (ID,NAME,EMAIL,SNS_TYPE)
+		VALUES(#{id},#{name},#{email},#{snsType})
+	</insert>
+	<update id="deleteMember" parameterType="member">
+		UPDATE MEMBER 
+		SET STATUS = 2
+		WHERE ID = #{id}
+	</update>
+	
+	<update id="updateMember">
+		UPDATE MEMBER 
+		SET EMAIL = #{email},
+		PHONE = #{phone},
+		GRADE = #{grade},
+		STATUS =#{status}
+		WHERE ID = #{id}
+	</update>
+	
+	<update id="updateWithoutPhone">
+		UPDATE MEMBER 
+		SET EMAIL = #{email},
+		GRADE = #{grade},
+		STATUS =#{status}
+		WHERE ID = #{id}
+	</update>
+	
+	<update id="updateWithoutEmail">
+		UPDATE MEMBER 
+		SET PHONE = #{phone},
+		GRADE = #{grade},
+		STATUS =#{status}
+		WHERE ID = #{id}
+	</update>
+</mapper>
+
+
+
+
+
+

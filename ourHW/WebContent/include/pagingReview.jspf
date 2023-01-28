@@ -1,0 +1,73 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <p class="py-5"></p>
+	<div>
+		<ul id="ReviewPagingButton" class="pagination justify-content-center">
+			<%--[1페이지로]에 대한 사용여부 처리 --%>
+			<c:if test="${pr.beginPage == 1 }">
+				<li class="page-item disabled"><a class="pritems page-link text-body">**</a></li>
+			</c:if>
+			<c:if test="${pr.beginPage != 1 }">
+				<li class="page-item">
+					<a class="pritems page-link text-body" value="1">
+						**
+					</a>
+				</li>
+			</c:if>
+			
+			<%--[이전으로]에 대한 사용여부 처리 --%>
+			<c:if test="${pr.beginPage == 1 }">
+				<li class="page-item disabled"><a class="pritems page-link text-body">pre</a></li>
+			</c:if>
+			<c:if test="${pr.beginPage != 1 }">
+				<li class="page-item">
+					<a class="pritems page-link text-body" value="${pr.beginPage - 1 }">
+						pre
+					</a>
+				</li>
+			</c:if>
+			
+			<%-- 블록내에 표시할 페이지 태그 작성(시작페이지~끝페이지) --%>
+			
+			<c:forEach var="pageNo" begin="${pr.beginPage }" end="${pr.endPage }">
+				<c:if test="${pageNo == pr.nowPage }" >	
+					<li class="page-item disabled">
+					<a class="pritems page-link text-body font-weight-bold">${pageNo }</a></li>
+				</c:if>
+				<c:if test="${pageNo != pr.nowPage }">
+					<li class="page-item">
+						<a class="pritems page-link text-body" value="${pageNo }">${pageNo }</a>
+					</li>					
+				</c:if>
+			
+			</c:forEach>	
+				
+				
+			<%--[다음으로]에 대한 사용여부 처리 --%>
+			<c:if test="${pr.endPage >= pr.totalPage }">
+				<li class="page-item disabled">
+					<a class="pritems page-link text-body">nex</a></li>
+			</c:if>					
+			<c:if test="${pr.endPage < pr.totalPage }">
+				<li class="page-item">
+					<a class="pritems page-link text-body" value="${pr.endPage + 1 }">
+						nex
+					</a>
+				</li>
+			</c:if>
+					
+			<%--[마지막으로]에 대한 사용여부 처리 --%>
+			<c:if test="${pr.endPage >= pr.totalPage }">
+				<li class="page-item disabled">
+					<a class="pritems page-link text-body">**</a></li>
+			</c:if>
+			<c:if test="${pr.endPage < pr.totalPage }">
+				<li class="page-item">
+					<a class="pritems page-link text-body" value="${pr.totalPage }">
+						**
+					</a>
+				</li>
+			</c:if>					
+		</ul>
+	</div>
+    <p class="py-3"></p>

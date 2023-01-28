@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.Imuseum.mypage.dao.MypageDAO">
+
+   <!-- 배송지 목록 -->
+	<select id="getAddrList" parameterType="addr" resultType="addr">
+		SELECT * FROM ADDRESS WHERE ID = #{id} ORDER BY ADDR_NUM DESC
+	</select>
+	
+   <!-- 배송지 추가 -->
+   <insert id="insertAddr" parameterType="addr">
+      INSERT INTO ADDRESS (ID, ADDR_NUM, ADDR, ADDR_DETAIL, POST_NUM, ADDR_PHONE, ADDR_GETTER, ADDR_DEFAULT)
+      VALUES (#{id}, ADDR_SEQ.nextval, #{addr}, #{addrDetail}, #{postNum}, #{addrPhone}, #{addrGetter}, 'N')
+   </insert>
+   
+   <!-- 배송지 수정 -->
+   <update id="updateAddr" parameterType="addr">
+	UPDATE ADDRESS
+	SET POST_NUM = #{postNum},
+	       ADDR = #{addr},
+	       ADDR_DETAIL = #{addrDetail},
+	       ADDR_PHONE = #{addrPhone},
+	       ADDR_GETTER = #{addrGetter}
+	WHERE ADDR_NUM = #{addrNum}
+   </update>
+   
+   <!-- 기본 배송지로 설정 -->
+   <update id="updateAddrDefault" parameterType="addr">
+   	UPDATE ADDRESS
+  	SET ADDR_DEFAULT = 'Y'
+  	WHERE ADDR_NUM = #{addrNum}
+   </update>
+   
+   <select id="addrOne" parameterType="addr" resultType="addr">
+   	SELECT *
+   	FROM ADDRESS
+   	WHERE ADDR_NUM = #{addrNum}
+   </select>
+   
+   <!-- (메인)주문/배송중인 배송지 갯수 -->
+   <select id="getOrderCnt" parameterType="String" resultType="int">
+   <!-- 	SELECT COUNT(ORDER_NUM) FROM ORDERS WHERE ID = #{id} AND STATUS = '배송준비중' OR STATUS = '배송중' OR STATUS = '결제완료' OR STATUS = '입금확인중' -->
+   SELECT COUNT(ORDER_NUM) FROM ORDERS WHERE ID = #{id} AND STATUS IN ('배송준비중','배송중','결제완료','입금확인중')
+   </select>
+   
+   <!-- 배송지 삭제 -->
+   <delete id="deleteAddr" parameterType="addr">
+      DELETE FROM ADDRESS WHERE ADDR_NUM = #{addrNum} AND ID = #{id}
+   </delete>
+   
+   <!-- 배송지 갯수 -->
+   <select id="getAddrCnt" parameterType="String" resultType="int">
+   	SELECT COUNT(ADDR_NUM) FROM ADDRESS WHERE ID = #{id}
+   </select>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
+   <!-- checkPwd -->
+   <select id="checkPwd" parameterType="member" resultType="member">
+   	SELECT * FROM MEMBER
+	WHERE ID=#{id} AND PASSWORD=#{password}
+   </select>
+   
+   <!-- 회원 정보 수정 -->
+   <update id="updateInfo" parameterType="member">
+    UPDATE MEMBER
+	SET PASSWORD = #{password},
+	    PHONE = #{phone},
+	    EMAIL = #{email}
+	WHERE ID = #{id}
+   </update>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
+   
+   <!-- 주문취소내역 조회 -->
+   <select id="returnList" parameterType="return" resultType="return">
+   	SELECT ORDER_NUM, ID, ORDER_DATE, ORDER_CANCEL
+	FROM ORDERS
+	WHERE ORDER_CANCEL='Y'
+    AND ID = #{id}
+   </select>
+   
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
+   <!-- 티켓 예매 내역 카운트  -->
+   <select id="ticketCnt" parameterType="String" resultType="int">
+   	SELECT COUNT(REV_NUM) FROM EXHIBITION_REV WHERE ID = #{id}
+   </select>
+   
+   <!-- 티켓예매내역 : 개인 -->
+   <select id="ticketPersonal" parameterType="ticketPersonal" resultType="ticketPersonal">
+   	SELECT REV_NUM, EXH_NAME, REV_DATE, REGDATE, STATUS, TOTALPRICE
+   	FROM EXHIBITION_REV
+   	WHERE ID = #{id}
+	ORDER BY REV_NUM DESC
+   </select>
+   
+   <!-- 티켓 예매 취소 -->
+   <update id="deleteTicket" parameterType="ticketPersonal">
+   	UPDATE EXHIBITION_REV
+	SET STATUS = '예매취소'
+	WHERE REV_NUM = #{revNum}
+   </update>
+   
+   <update id="deleteLearnTicket" parameterType="learnTicket">
+   	UPDATE LEARN_REV
+	SET STATUS = '예매취소'
+	WHERE REV_NUM = #{revNum}
+   </update>
+   
+   <!-- 내역 날짜 검색 -->
+   <select id="ticketPersonalToday" parameterType="ticketPersonal" resultType="ticketPersonal">
+   	SELECT *
+   	FROM EXHIBITION_REV
+	WHERE TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd')
+	ORDER BY REV_NUM DESC
+   </select>
+   
+   <select id="ticketPersonalWeek" parameterType="ticketPersonal" resultType="ticketPersonal">
+   	SELECT *
+   	FROM EXHIBITION_REV
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	ORDER BY REV_NUM DESC
+   </select>
+   
+   <select id="ticketPersonalMonth" parameterType="ticketPersonal" resultType="ticketPersonal">
+   	SELECT *
+   	FROM EXHIBITION_REV
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	ORDER BY REV_NUM DESC 
+   </select>
+   
+   <select id="ticketPersonalSelect" parameterType="map" resultType="ticketPersonal">
+   	SELECT *
+   	FROM EXHIBITION_REV
+	WHERE REGDATE BETWEEN TO_DATE(#{regdate1},'yyyy-mm-dd') 
+	AND TO_DATE(#{regdate2},'yyyy-mm-dd')
+	ORDER BY REV_NUM DESC 
+   </select>
+   
+<!-- 교육티켓예매목록 보기 -->
+	<select id="getLearnTicket" parameterType="learnTicket" resultType="learnTicket">
+		SELECT * FROM 
+		LEARN_REV
+		WHERE ID = #{id}
+		ORDER BY REV_NUM DESC
+	</select> 
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
+   
+   <!-- 주문내역(온라인) -->
+   <select id="orderOnline" parameterType="orderOnline" resultType="orderOnline">
+   	SELECT ORDER_NUM, ID, ORDER_DATE, TOTAL_PRICE, STATUS, ORDER_CANCEL, PAYMENT_TYPE
+	FROM ORDERS
+	WHERE ORDER_CANCEL='N'
+	AND ID = #{id}
+	ORDER BY ORDER_NUM DESC
+   </select>
+   
+   <!-- 온라인 주문 취소하기 -->
+   <update id="deleteOrder" parameterType="orderOnline">
+   	UPDATE ORDERS
+    SET ORDER_CANCEL = 'Y'
+    WHERE ORDER_NUM = #{orderNum}
+   </update>
+   
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
+   <!-- 상품문의 내역 조회 -->
+   <select id="productFaq" parameterType="productFaq" resultType="productFaq">
+   	SELECT PQ.ID, P.PRODUCT_NUM, P.PRODUCT_NAME, P.PHOTO1, PQ.PQNA_NUM, 
+   		   PQ.QUESTION, PQ.ANSWER, PQ.REGDATE, PQ.P_STATUS
+	FROM PRODUCT P, PRODUCT_QNA PQ
+	WHERE P.PRODUCT_NUM = PQ.PRODUCT_NUM
+    AND PQ.ID = #{id}
+   </select>
+   
+   <!-- 상품문의 내역 삭제 -->
+   <delete id="deleteFaq" parameterType="productFaq">
+   	DELETE FROM PRODUCT_QNA WHERE PQNA_NUM = #{pqnaNum} AND ID = #{id}
+   </delete>
+   
+   <select id="pqOne" parameterType="productFaq" resultType="productFaq">
+   	SELECT *
+    FROM PRODUCT_QNA
+    WHERE PQNA_NUM = #{pqnaNum}
+   </select>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
+   
+   <!-- 작성한 리뷰 목록 보기 -->
+   <select id="productReview" parameterType="productReview" resultType="productReview">
+   	SELECT O.*, PR.PR_NUM, PR.CONTENT, PR.REGDATE, PR.STAR
+      FROM VW_ORDERS O LEFT OUTER JOIN PRODUCT_REV PR
+         ON O.OPRODUCT_NUM = PR.OPRODUCT_NUM
+      WHERE O.ID = #{id}
+      AND PR_NUM IS NOT NULL
+      ORDER BY O.ORDER_DATE DESC
+   </select>
+   
+   <!-- 작성 가능한 리뷰 목록 보기 -->
+   <select id="reviewWrite" parameterType="reviewWrite" resultType="reviewWrite">
+   	SELECT O.*, PR.PR_NUM, PR.CONTENT, PR.REGDATE, PR.STAR
+	FROM VW_ORDERS O LEFT OUTER JOIN PRODUCT_REV PR
+	    ON O.OPRODUCT_NUM = PR.OPRODUCT_NUM
+	WHERE O.ORDER_CANCEL = 'N'
+	AND O.STATUS IN ('배송완료' ,'구매확정' )
+	AND O.ID= #{id}
+	AND PR_NUM IS NULL
+	ORDER BY O.ORDER_DATE DESC
+   </select>
+   
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
+   
+   <!-- 소연~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- 아이디로 배송지 리스트 조회 -->
+	<select id="getAddressList" parameterType="String" resultType="addr">
+		SELECT * FROM ADDRESS 
+		WHERE ID = #{id}
+		ORDER BY ADDR_DEFAULT DESC
+	</select>
+	
+	<!-- 기본배송지 조회 -->
+	<select id="getDefaultAddr" parameterType="String" resultType="addr">
+		SELECT * FROM ADDRESS
+		WHERE ID = #{id}
+		AND ADDR_DEFAULT = 'Y'
+	</select>
+   
+   <!-- 주문 1건 조회 -->
+   <select id="getOrder" resultType="orderOnline">
+   	SELECT * FROM ORDERS
+	WHERE ORDER_NUM = #{orderNum};
+   </select>   
+   
+   <!-- 카드결제 취소 -->
+   <update id="deleteOrderCard" parameterType="order">
+   	UPDATE ORDERS
+    SET ORDER_CANCEL = 'Y'
+    WHERE ORDER_NUM = #{orderNum}
+   </update>
+   
+    <!-- 주문 취소시 재고수량 변경 -->
+    <update id="updateCancleCnt" parameterType="orderPageP">
+		UPDATE PRODUCT_OPTION
+		SET CNT = (SELECT CNT FROM PRODUCT_OPTION WHERE PRODUCT_NUM = #{productNum}
+           			 AND OPTION_NAME = #{productOption}) + #{productCnt} 
+		WHERE PRODUCT_NUM = #{productNum}
+		AND OPTION_NAME = #{productOption} 
+    </update> 
+    
+    <!-- 상품리뷰작성 -->
+	<insert id="productReviewInsert" parameterType="productReview" >
+   INSERT INTO PRODUCT_REV (PR_NUM,PRODUCT_NUM,ID,CONTENT,STAR,OPRODUCT_NUM)
+   VALUES ((SELECT MAX(NVL(PR_NUM,0) + 1) FROM PRODUCT_REV), 
+         #{productNum}, #{id}, #{content},#{star},#{oproductNum})
+   </insert>
+	
+	<!-- 리뷰 삭제 -->
+	<delete id="productReviewDelete" parameterType="int">
+	DELETE FROM PRODUCT_REV
+	WHERE PR_NUM = #{prNum}	
+	</delete>
+	
+	<!-- 리뷰 수정 -->
+	<update id="productReviewUpdate" parameterType="productReview">
+	UPDATE PRODUCT_REV
+	SET CONTENT=#{content},
+   	 	STAR=#{star}
+	WHERE PR_NUM=#{prNum}	
+	</update>
+   
+</mapper>
+
+
+
+
+
+

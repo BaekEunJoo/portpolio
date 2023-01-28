@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="orderDAO">
+
+	<select id="getProductInfo" parameterType="orderPageP" resultType="orderPageP">
+		SELECT PRODUCT_NAME AS PRODUCTNAME, PRICE, PHOTO1 AS PHOTO , DISCOUNT
+		FROM PRODUCT
+		WHERE PRODUCT_NUM = #{productNum}
+	</select>
+		
+	<insert id="insertOrders" parameterType="order">
+		<if test="paymentType == '카드결제'">
+		INSERT INTO ORDERS (ORDER_NUM,ID,ORDER_NAME,POSTCODE,ORDER_ADDR,ORDER_PHONE,ORDER_REQ,PAYMENT_TYPE,
+							TOTAL_PRICE,SHIPPING,CARD_NUM,CARD_NAME,CARD_QUOTA, APPROVAL_NUM)
+		VALUES(#{orderNum},#{id}, #{orderName}, #{postcode}, #{orderAddr}, #{orderPhone}, #{orderReq}, #{paymentType},
+					#{totalPrice},#{shipping},#{cardNum}, #{cardName}, #{cardQuota}, #{approvalNum} )
+		</if>
+		<if test="paymentType == '무통장입금'">
+		INSERT INTO ORDERS (ORDER_NUM,ID,ORDER_NAME,POSTCODE,ORDER_ADDR,ORDER_PHONE,ORDER_REQ,PAYMENT_TYPE,
+							TOTAL_PRICE,SHIPPING,STATUS)	
+		VALUES(#{orderNum}, #{id}, #{orderName}, #{postcode}, #{orderAddr}, #{orderPhone}, #{orderReq}, #{paymentType},
+				 #{totalPrice}, #{shipping}, '입금확인중')
+		</if>
+	</insert>
+	
+	<insert id="insertOrderProduct" parameterType="orderPageP" >
+		INSERT INTO ORDER_PRODUCT (OPRODUCT_NUM,ORDER_NUM,ID,PRODUCT_NUM,PRICE,PRODUCT_NAME,PRODUCT_OPTION,PRODUCT_CNT)
+		VALUES(ORDER_PRODUCT_SEQ.NEXTVAL,#{orderNum},#{id},#{productNum},#{price},#{productName},#{productOption},#{productCnt})
+	</insert>
+	
+	<select id="getOrderNum" resultType="String">
+		SELECT ORDERNUM_SEQ.CURRVAL FROM DUAL
+	</select>
+	
+	<select id="getOrder" parameterType="String" resultType="order">
+		SELECT O.*, S.SHIP_NUM, S.SHIP_COMPANY
+		FROM ORDERS O, PRODUCT_SHIP S
+		WHERE O.ORDER_NUM = S.ORDER_NUM
+        AND O.ORDER_NUM = #{orderNum}
+	</select>
+			
+	<update id="updateOrderCnt" parameterType="orderPageP">
+		UPDATE PRODUCT_OPTION
+		SET CNT = (SELECT CNT FROM PRODUCT_OPTION WHERE PRODUCT_NUM = #{productNum}
+           			 AND OPTION_NAME = #{productOption}) - #{productCnt} 
+		WHERE PRODUCT_NUM = #{productNum}
+		AND OPTION_NAME = #{productOption}
+	</update>
+	
+	<select id="getOrderProduct" parameterType="string" resultType="orderPageP">
+		SELECT O.*, P.PHOTO1 AS PHOTO
+		FROM ORDER_PRODUCT O, PRODUCT P
+		WHERE O.PRODUCT_NUM = P.PRODUCT_NUM
+		AND ORDER_NUM = #{orderNum} 
+	</select>
+		
+	<insert id="insertShip" parameterType="string">
+		INSERT INTO PRODUCT_SHIP (ORDER_NUM)
+		VALUES(#{orderNum})
+	</insert>	
+	<!-- 현준 -->
+	<select id="getOrderList" parameterType="order" resultType="order">
+		<![CDATA[
+		SELECT DISTINCT O.*
+		FROM ORDERS O WHERE O.ORDER_DATE > SYSDATE - 7 
+		ORDER BY O.ORDER_NUM DESC 
+		]]>
+	</select>
+	
+	<select id="getSaleList" parameterType="order" resultType="order">
+		SELECT DISTINCT O.* 
+		FROM ORDERS O
+		WHERE O.STATUS = '구매확정'
+		ORDER BY O.ORDER_NUM DESC 
+	</select>
+	
+	<select id="getdaySaleList" parameterType="order" resultType="order">
+		SELECT DISTINCT O.* 
+		FROM ORDERS O
+		WHERE O.STATUS = '구매확정'
+        AND to_char(o.order_date, 'yyyymmdd' ) = to_char( sysdate, 'yyyymmdd')
+		ORDER BY O.ORDER_NUM DESC  
+	</select>
+	<select id="getday2SaleList" parameterType="order" resultType="order">
+		SELECT DISTINCT O.* 
+		FROM ORDERS O
+		WHERE O.STATUS = '구매확정'
+        AND to_char(o.order_date, 'yyyymmdd' ) = to_char( sysdate-1, 'yyyymmdd')
+		ORDER BY O.ORDER_NUM DESC  
+	</select>
+	<select id="getday3SaleList" parameterType="order" resultType="order">
+		SELECT DISTINCT O.* 
+		FROM ORDERS O
+		WHERE O.STATUS = '구매확정'
+        AND to_char(o.order_date, 'yyyymmdd' ) = to_char( sysdate-2, 'yyyymmdd')
+		ORDER BY O.ORDER_NUM DESC  
+	</select>
+	<select id="getday4SaleList" parameterType="order" resultType="order">
+		SELECT DISTINCT O.* 
+		FROM ORDERS O
+		WHERE O.STATUS = '구매확정'
+        AND to_char(o.order_date, 'yyyymmdd' ) = to_char( sysdate-3, 'yyyymmdd')
+		ORDER BY O.ORDER_NUM DESC  
+	</select>
+	<select id="getday5SaleList" parameterType="order" resultType="order">
+		SELECT DISTINCT O.* 
+		FROM ORDERS O
+		WHERE O.STATUS = '구매확정'
+        AND to_char(o.order_date, 'yyyymmdd' ) = to_char( sysdate-4, 'yyyymmdd')
+		ORDER BY O.ORDER_NUM DESC  
+	</select>
+	
+	<update id="updateOrder" parameterType="order">
+		UPDATE ORDERS SET STATUS = #{status} 
+		WHERE ORDER_NUM = #{orderNum}
+	</update>
+	
+	<update id="updateDate">
+		<![CDATA[
+		UPDATE ORDERS SET STATUS = '구매확정' 
+		WHERE ORDER_DATE < (SYSDATE-3) AND STATUS = '배송완료' 
+		]]>
+	</update>
+	
+	<update id="updateShip" parameterType="productShip" >
+		UPDATE PRODUCT_SHIP SET SHIP_NUM = (SELECT NVL(MAX(SHIP_NUM),0) + 1 FROM PRODUCT_SHIP),
+						  SHIP_COMPANY = #{shipCompany}
+		WHERE ORDER_NUM = #{orderNum}
+	</update>
+	
+	<delete id="deleteOrder" parameterType="order">
+		DELETE FROM ORDERS WHERE ORDER_NUM = #{orderNum} 
+	</delete>
+	
+	<select id="getShip" parameterType="order" resultType="order">
+		SELECT * FROM ORDERS
+		WHERE ORDER_NUM = #{orderNum} 
+	</select>
+	
+	<update id="updateStatus" parameterType="order">
+		UPDATE ORDERS SET STATUS = '배송준비중' 
+		WHERE ORDER_NUM = #{orderNum}
+	</update>
+		
+</mapper>
+
+
+
+
+
+

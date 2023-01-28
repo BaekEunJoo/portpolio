@@ -1,0 +1,23 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<div style="cursor: pointer; text-align: right; margin: 20px; 80px; font-weight: bold; font-size: 0.9em;">
+	<c:choose>
+		<c:when test="${member.snsType eq '3'}">
+			<a href="https://kauth.kakao.com/oauth/logout?client_id=e08db572b32c6e4b5d11899b3b5dab22&logout_redirect_uri=http://localhost:8080/Imuseum/logout.do"
+			style="text-decoration: none; color: black;">
+				<span style="margin-right: 20px;">LOGOUT</span>
+			</a>	
+		</c:when>
+		<c:otherwise>
+			<span id="confirmStart" style="margin-right: 20px;">LOGOUT</span>
+		</c:otherwise>
+	</c:choose>
+	<span onclick="location.href='mypage_main.do'" style="margin-right: 20px;">MY PAGE</span>
+	<span onclick="location.href='allNotice.do'" style="margin-right: 20px;">NOTICE</span>
+	<span onclick="location.href='FAQ.do'" style="margin-right: 20px;">FAQ</span>
+</div>
+
+<script 
+	src="/Imuseum/common/js/memberLogout.js"></script>
+	
+	

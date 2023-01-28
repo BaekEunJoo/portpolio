@@ -1,0 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<p class="py-3"></p>
+<div id="footer" class="h6 text-center">
+	<ul class="nav flex-column">
+		<li>
+			<span>상호</span>
+			멜루드
+			<span>대표</span>
+			한희상
+			<span>전화</span>
+			070-4108-3725
+			<span>주소</span>
+			21316 인천광역시 부평구 부평대로 290 (갈산동) 창신빌딩 2층 201호
+		</li>
+		<li>
+			<span>사업자 등록번호</span>
+			204-51-17008
+			<span>통신판매업 신고</span>
+			2021-인천부평-2776
+			[사업자정보확인]
+			<span>개인정보보호책임자</span>
+			한희상(official.mellood@gmail.com)
+		</li>
+		<li>
+		© 멜루드. All rights reserved.
+		<li>
+	</ul>
+</div>
+<p class="py-3"></p>

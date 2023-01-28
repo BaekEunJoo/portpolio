@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+
+	<typeAliases>
+		<!-- 태우 -->
+		<typeAlias alias="learn" type="com.spring.Imuseum.learn.LearnVO"/>
+		<typeAlias alias="groupReservation" type="com.spring.Imuseum.learn.GroupReservationVO"/>		
+		<typeAlias alias="CategoryLearn" type="com.spring.Imuseum.learn.CategoryLearnVO"/>
+		<typeAlias alias="educationLearn" type="com.spring.Imuseum.learn.EducationLearnVO"/>
+		<typeAlias alias="placeLearn" type="com.spring.Imuseum.learn.PlaceLearnVO"/>
+		<typeAlias alias="learnLike" type="com.spring.Imuseum.learn.LearnLikeVO"/>
+		
+		
+		<!--동환-->
+		<typeAlias alias="member" type="com.spring.Imuseum.member.MemberVO"/>
+		<typeAlias alias="qnaMenu" type="com.spring.Imuseum.qnaBoard.QnaBoardMenuVO"/>
+		<typeAlias alias="qnaCategory" type="com.spring.Imuseum.qnaBoard.QnaBoardCategoryVO"/>
+		<typeAlias alias="qnaBoard" type="com.spring.Imuseum.qnaBoard.QnaBoardVO"/>
+		<typeAlias alias="qnaFile" type="com.spring.Imuseum.qnaBoard.QnaFileVO"/>
+		<typeAlias alias="qnaReply" type="com.spring.Imuseum.qnaBoard.QnaAnswerVO"/>
+		
+		<!-- 현준 -->
+		<typeAlias type="com.spring.Imuseum.product.ProductVO" alias="product"/>
+		<typeAlias type="com.spring.Imuseum.product.OptionVO" alias="productOption"/>
+		<typeAlias type="com.spring.Imuseum.product.ReviewVO" alias="adminReview"/>
+		<typeAlias type="com.spring.Imuseum.product.ProductQnaVO" alias="productQna"/>
+		<typeAlias type="com.spring.Imuseum.order.ProductShipVO" alias="productShip"/>		
+		
+		<!-- 소연 -->
+		<typeAlias alias="cart" type="com.spring.Imuseum.order.CartVO"/>
+		<typeAlias alias="order" type="com.spring.Imuseum.order.OrderVO"/>
+		<typeAlias alias="orderPageP" type="com.spring.Imuseum.order.OrderPagePVO"/>
+		<typeAlias alias="orderPage" type="com.spring.Imuseum.order.OrderPageVO"/>
+		<typeAlias alias="wish" type="com.spring.Imuseum.order.WishVO"/>
+		
+		
+		
+		<!-- 다은 -->
+		<typeAlias alias="exhibitionVO" type="com.spring.Imuseum.exhibition.ExhibitionVO"/>
+		<typeAlias alias="artistsVO" type="com.spring.Imuseum.exhibition.ArtistsVO"/>
+		<typeAlias alias="learnTicket" type="com.spring.Imuseum.ticket.LearnTicketVO"/>
+		<typeAlias alias="exhibitionTicket" type="com.spring.Imuseum.ticket.ExhibitionTicketVO"/>
+		<typeAlias alias="ticketType" type="com.spring.Imuseum.ticket.ExhibitionTypeVO"/>
+		
+		<!-- 은주 -->
+		<typeAlias alias="addr" type="com.spring.Imuseum.mypage.AddrVO"/>
+		<typeAlias alias="return" type="com.spring.Imuseum.mypage.ReturnVO"/>
+		<typeAlias alias="ticketPersonal" type="com.spring.Imuseum.mypage.ticketPersonalVO"/>
+		<typeAlias alias="orderOnline" type="com.spring.Imuseum.mypage.orderOnlineVO"/>
+		<typeAlias alias="productFaq" type="com.spring.Imuseum.mypage.ProductFaqVO"/>
+		<typeAlias alias="productReview" type="com.spring.Imuseum.mypage.ReviewVO"/>
+		<typeAlias alias="reviewWrite" type="com.spring.Imuseum.mypage.ReviewWriteVO"/>
+		<typeAlias alias="notice" type="com.spring.Imuseum.notice.NoticeVO"/>
+		
+		
+		
+	</typeAliases>
+	
+  <!-- applicationContext.xml 에서 dataSource 설정 사용으로 대체 
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+        <property name="username" value="mystudy"/>
+        <property name="password" value="mysutydpw"/>
+      </dataSource>
+    </environment>
+  </environments>
+  -->
+  
+  <!-- 스프링 설정 파일 설정사용방식으로 사용안함
+  <mappers>
+    <mapper resource="mappings/board/BoardMapper.xml"/>
+    <mapper resource="mappings/user/UserMapper.xml"/>
+  </mappers>
+  -->
+  
+</configuration>

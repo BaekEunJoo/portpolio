@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.Imuseum.notice.dao.NoticeDAO">
+
+   <!-- 전체 -->
+	<select id="allNotice" parameterType="notice" resultType="notice">
+		SELECT N.NO_NUM, N.NO_DATE, N.NO_TITLE, N.NO_CATEGORY, NC.NO_CATEGORY_NUM
+		FROM NOTICE N, NOTICE_CATEGORY NC
+		WHERE N.NO_CATEGORY = NC.NO_CATEGORY
+	</select>
+	
+	<!-- 디뮤지엄 -->
+	<select id="deNotice" parameterType="notice" resultType="notice">
+		SELECT N.NO_NUM, N.NO_DATE, N.NO_TITLE, N.NO_CATEGORY, NC.NO_CATEGORY_NUM
+		FROM NOTICE N, NOTICE_CATEGORY NC
+		WHERE N.NO_CATEGORY = NC.NO_CATEGORY AND N.NO_CATEGORY = '디뮤지엄'
+	</select>
+	
+	<!-- 뮤지엄샵 -->
+	<select id="muNotice" parameterType="notice" resultType="notice">
+		SELECT N.NO_NUM, N.NO_DATE, N.NO_TITLE, N.NO_CATEGORY, NC.NO_CATEGORY_NUM
+		FROM NOTICE N, NOTICE_CATEGORY NC
+		WHERE N.NO_CATEGORY = NC.NO_CATEGORY AND N.NO_CATEGORY = '뮤지엄샵'
+	</select>
+	
+	<!-- 대림미술관 -->
+	<select id="daeNotice" parameterType="notice" resultType="notice">
+		SELECT N.NO_NUM, N.NO_DATE, N.NO_TITLE, N.NO_CATEGORY, NC.NO_CATEGORY_NUM
+		FROM NOTICE N, NOTICE_CATEGORY NC
+		WHERE N.NO_CATEGORY = NC.NO_CATEGORY AND N.NO_CATEGORY = '대림미술관'
+	</select>
+	
+	<!-- 구슬모아당구장 -->
+	<select id="guNotice" parameterType="notice" resultType="notice">
+		SELECT N.NO_NUM, N.NO_DATE, N.NO_TITLE, N.NO_CATEGORY, NC.NO_CATEGORY_NUM
+		FROM NOTICE N, NOTICE_CATEGORY NC
+		WHERE N.NO_CATEGORY = NC.NO_CATEGORY AND N.NO_CATEGORY = '구슬모아당구장'
+	</select>
+	
+</mapper>
+
+
+
+
+
+

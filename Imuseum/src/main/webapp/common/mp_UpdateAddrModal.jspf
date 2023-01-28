@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- 기본 배송지로 설정 모달창 시작 -->
+<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+			<p>기본 배송지로 변경하시겠습니까?</p>
+		    </div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+       			<button type="button" class="btn btn-primary btn-dark">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 기본 배송지로 설정 모달창 끝 -->
+<!-- 배송지 추가 모달창 시작 -->
+<div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header text-white" style="background-color:black;">
+				<h3 class="modal-title fs-5" id="staticBackdropLabel" style="color:white;">배송지 추가</h3>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true" class="text-white">X</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="body_addr mb-3">
+	      		<strong>주소*</strong><br>
+	      		<input type="text" name="postNum" id="postNum" class="mb-2 p-2" placeholder="우편번호">
+				<input type="button" class="mb-2 p-2" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" style="background-color:black; color:white;"><br>
+				<input type="text" name="addr" id="addr" class="mb-2 p-2" placeholder="주소"><br>
+				<input type="text" name="addrDetail" id="addrDetail" class="mb-2 p-2" placeholder="상세주소">
+				<!-- <input type="text" id="sample6_extraAddress" placeholder="참고항목"> -->
+	      	</div>
+	      	<div class="body_getter mb-3">
+	      		<strong>수령인*</strong><br>
+	      		<input name="addrGetter" type="text" placeholder="수령인" class="p-2">
+	      	</div>
+	      	<div class="body_phone mb-3">
+	      		<strong>휴대폰 번호*</strong><br>
+	      		<select class="p-2">
+	      			<option>010</option>
+	      			<option>011</option>
+	      			<option>016</option>
+	      			<option>017</option>
+	      			<option>018</option>
+	      		</select>
+	      		-<input name="addrPhone" type="number" class="p-2">
+	      	</div>
+      		<input name="addrDefault" type="checkbox">기본 배송지로 설정
+	      </div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary bg-white text-dark" data-dismiss="modal">취소</button>
+       			<button type="submit" class="btn btn-primary bg-dark text-white" onclick="checkvalue(this.form)">등록</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 배송지 추가 모달창 끝 -->

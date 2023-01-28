@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.Imuseum.learn.dao.LearnDAO">
+ 	
+
+	<select id="getLearnTotalCount" resultType="int">
+		SELECT COUNT(*) AS CNT 
+		FROM LEARN
+		WHERE REGDATE2 > SYSDATE
+		ORDER BY LEARN_IDX DESC
+	</select>
+	<select id="getLearnList" parameterType="map" resultType="learn">
+	 	SELECT *
+	   	  FROM (SELECT ROW_NUMBER() OVER (ORDER BY LEARN_IDX DESC) AS R_NUM,
+	    		 L.* FROM (SELECT *
+	    					  FROM LEARN WHERE REGDATE2 > SYSDATE
+	     			  					 ORDER BY LEARN_IDX ASC
+	            			) L  
+	      		) WHERE R_NUM BETWEEN #{begin} AND #{end}
+	</select>
+	
+
+	<select id="getLearnList3" parameterType="learn" resultType="learn">
+	 	SELECT *
+		FROM LEARN
+		WHERE REGDATE2 > SYSDATE
+		ORDER BY LEARN_IDX DESC
+	</select> 
+
+	
+	<!-- learn 목록보기2 -->
+	<select id="getLearnList2" parameterType="learn" resultType="learn">
+		SELECT *
+		FROM LEARN
+		WHERE REGDATE2 <![CDATA[<]]> SYSDATE
+		ORDER BY LEARN_IDX DESC
+	</select>		
+ 	<!-- learn상세보기 -->
+	<select id="getLearn" parameterType="learn" resultType="learn">
+		SELECT * FROM LEARN WHERE LEARN_IDX = #{learnIdx}
+	</select>
+	<!-- learn추가 -->
+	<insert id="insertLearn" parameterType="learn">
+	 	 INSERT INTO LEARN (CATEGORY_NUM, ID, TITLE, LEARN_IDX, REGDATE1, REGDATE2, PLACE, INQUIRY, EDUCATION_TIME_NUM, EDUCATION_TIME,
+		EDUCATION_NUMBER, MEMBER_NUMBER, FEE, CONTENT, SUBTITLE, TARGET, FILENAME, EDUCATION_NUM, PLACE_NUM, LIKECHECK, FILENAME2)
+		VALUES (#{categoryNum}, 'admin', #{title}, LEARN_SEQ.NEXTVAL, #{regdate1}, #{regdate2}, #{place}, #{inquiry}, #{educationTimeNum}, #{educationTime},
+	 	 #{educationNumber}, #{memberNumber}, #{fee}, #{content}, #{subtitle}, #{target}, #{fileName}, #{educationNum}, #{placeNum}, 0, #{fileName2})
+	</insert>
+	<!-- learn수정 -->
+	<update id="updateLearn" parameterType="learn">
+		UPDATE LEARN 
+		SET CATEGORY_NUM = #{categoryNum}, 
+		    ID = 'admin',
+		    TITLE = #{title},
+		    REGDATE1 = #{regdate1},
+		    REGDATE2 = #{regdate2},
+		    PLACE = #{place},
+		    INQUIRY = #{inquiry},
+		    EDUCATION_TIME_NUM = #{educationTimeNum},
+		    EDUCATION_NUMBER = #{educationNumber},
+		    MEMBER_NUMBER = #{memberNumber},
+		    FEE = #{fee},
+		    CONTENT = #{content},
+		    SUBTITLE = #{subtitle},
+		    TARGET = #{target},
+		    FILENAME = #{fileName},
+		    EDUCATION_NUM = #{educationNum},
+		    PLACE_NUM = #{placeNum},
+		    EDUCATION_TIME = #{educationTime},
+		    FILENAME2 = #{fileName2}
+		WHERE LEARN_IDX = #{learnIdx} 
+	</update>
+	<!-- learn삭제 -->
+	<delete id="deleteLearn" parameterType="learn">
+		DELETE FROM LEARN WHERE LEARN_IDX = #{learnIdx}
+	</delete>
+	<!-- learn총 게시글 갯수 출력 -->
+	<select id="countLearn" resultType="int">
+		SELECT COUNT(*) AS CNT 
+		FROM LEARN
+		WHERE REGDATE2 > SYSDATE
+		ORDER BY LEARN_IDX DESC
+	</select>
+	<!-- learn 총 게시글 갯수 출력2 -->
+	<select id="countLearn2" resultType="int">
+		SELECT COUNT(*) AS CNT 
+		FROM LEARN
+		WHERE REGDATE2 <![CDATA[<]]> SYSDATE
+		ORDER BY LEARN_IDX DESC
+	</select>
+	<!-- learn연도별 출력 -->
+ 	<select id="yearLearn" parameterType="learn" resultType="learn">
+		SELECT * FROM LEARN WHERE REGDATE2 LIKE '%' || #{regdate2} || '%'
+	</select> 
+	<!-- 현재 카테고리별 출력 -->
+	<select id="categoryLearn" parameterType="learn" resultType="learn">
+		SELECT c.category_name,L.*
+		FROM LEARN L, CATEGORY_LEARN C
+		WHERE L.CATEGORY_NUM = C.CATEGORY_NUM
+		AND L.CATEGORY_NUM = #{categoryNum}
+		AND REGDATE2 > SYSDATE
+		ORDER BY LEARN_IDX DESC
+	</select>
+	<!-- 지난 카테고리별 출력 -->
+	<select id="categoryLearn2" parameterType="learn" resultType="learn">
+		SELECT c.category_name,L.*
+		FROM LEARN L, CATEGORY_LEARN C
+		WHERE L.CATEGORY_NUM = C.CATEGORY_NUM
+		AND L.CATEGORY_NUM = #{categoryNum}
+		AND REGDATE2 <![CDATA[<]]> SYSDATE
+		ORDER BY LEARN_IDX DESC
+	</select>
+	<!-- learn 장소별 출력 -->
+	<select id="placeLearn" parameterType="learn" resultType="learn">
+		SELECT p.place_num,L.*
+		FROM LEARN L, PLACE_LEARN P
+		WHERE L.PLACE_NUM = p.place_num
+		AND L.PLACE_NUM = #{placeNum}
+	</select>
+	<!-- learn educationNum 별로 출력 -->
+	<select id="educationLearn" parameterType="learn" resultType="learn">
+		SELECT E.EDUCATION_NUM, L.*
+		FROM LEARN L, EDUCATION_LEARN E
+		WHERE L.EDUCATION_NUM = E.EDUCATION_NUM
+		AND l.EDUCATION_NUM = #{educationNum}
+	</select>
+	
+	
+	
+	
+	<!-- 예약 개수-->
+	<select id="getGroupReservationTotalCount" resultType="int">
+		SELECT COUNT(*) AS CNT 
+		FROM GROUP_RESERVATION
+	</select>
+	<!-- 예약 조회 -->
+	<select id="groupReservation" parameterType="map" resultType="groupReservation">
+	 	SELECT *
+	   	  FROM (SELECT ROW_NUMBER() OVER (ORDER BY RESERVATION_IDX DESC) AS R_NUM,
+	    		 R.* FROM (SELECT *
+	    					  FROM GROUP_RESERVATION
+	     			  					 ORDER BY RESERVATION_IDX ASC
+	            			) R  
+	      		) WHERE R_NUM BETWEEN #{begin} AND #{end}
+	</select> 
+	
+	
+	<!-- 예약 조회 마이페이지-->
+	<select id="groupReservationMypage" parameterType="map" resultType="groupReservation">
+	 	SELECT * FROM GROUP_RESERVATION
+	    WHERE ID = #{id}
+	</select> 
+	
+	
+	
+	<!-- 예약 입력 -->
+	<insert id="InsertGroupReservation" parameterType="groupReservation">
+		INSERT INTO GROUP_RESERVATION (RESERVATION_IDX ,ID, NAME, CONTENT, RELATIONSHIP, MEMBER_NUMBER,
+										GROUP_VALUE, PROGRAM_TITLE, GROUP_INFORMATION, APPLICANT,
+										CARD, QUANTITY_METHOD, WANT_TIME, DATEPICKER, GROUP_NAME)
+		VALUES (RESERVATION_LEARN_SEQ.NEXTVAL, #{id}, #{name}, #{content}, #{relationship}, #{memberNumber},
+				 #{groupValue}, #{programTitle}, #{groupInfomation}, #{applicant},
+				  #{card}, #{quantityMethod}, #{wantTime}, #{datepicker}, #{groupName})
+	</insert>
+	<!-- 년도별 검색 -->
+	<select id="regdateSearch" parameterType="groupReservation" resultType="groupReservation">
+		SELECT * FROM GROUP_RESERVATION WHERE REGDATE BETWEEN #{regdate1} AND #{regdate2}
+	</select>
+	<!-- learn 조회수 증가 -->
+	<update id="viewsLearn" parameterType="int">
+		UPDATE LEARN 
+	    SET VIEWS = (SELECT VIEWS + 1 FROM LEARN WHERe LEARN_IDX = #{learnIdx})
+		WHERE LEARN_IDX = #{learnIdx}
+	</update>
+	<!-- 조회수 별 출력 -->
+	<select id="selectViews" parameterType="learn" resultType="learn">
+		SELECT *
+		FROM LEARN
+		ORDER BY VIEWS DESC
+	</select>
+	<!-- 최신순 별 출력 -->
+	<select id="selectNew" parameterType="learn" resultType="learn">
+		SELECT *
+		FROM LEARN
+		ORDER BY LEARN_IDX DESC
+	</select>
+	<!-- 오래된 순 별 출력 -->
+	<select id="selectOld" parameterType="learn" resultType="learn">
+		SELECT *
+		FROM LEARN
+		ORDER BY LEARN_IDX ASC
+	</select>
+	<!-- 단체예매 삭제 -->
+	<delete id="groupReservationDelete" parameterType="groupReservation">
+		DELETE FROM GROUP_RESERVATION WHERE RESERVATION_IDX = #{reservationIdx}
+	</delete>
+	<!-- groupReservation 오늘 날짜 데이터 조회 -->
+	<select id="todayGroupReservation" parameterType="groupReservation" resultType="groupReservation">
+		SELECT *
+		FROM GROUP_RESERVATION
+		WHERE TO_CHAR(REGDATE, 'YYYY-MM-dd') = TO_CHAR(SYSDATE, 'YYYY-MM-dd')
+	</select>
+	<!-- 일주일 전 데이터 조회 -->
+	<select id="weekGroupReservation" parameterType="groupReservation" resultType="groupReservation">
+		SELECT *
+		FROM GROUP_RESERVATION
+		WHERE TO_CHAR(REGDATE, 'YYYY-MM-dd') > TO_CHAR(SYSDATE -7 , 'YYYY-MM-dd')
+	</select>
+	<!-- 한달 전 데이터 조회 -->
+	<select id="monthGroupReservation" parameterType="groupReservation" resultType="groupReservation">
+		SELECT *
+		FROM GROUP_RESERVATION
+		WHERE TO_CHAR(REGDATE, 'YYYY-MM-dd') > TO_CHAR(SYSDATE -30 , 'YYYY-MM-dd')
+	</select>
+	<!-- 지난 프로그램 삭제 -->
+   <delete id="learnDelete2" parameterType="learn">
+      DELETE FROM LEARN WHERE LEARN_IDX = #{learnIdx}
+   </delete>
+   <!-- 게시글 추천수 -->
+	<update id="updateLike" parameterType="int">
+	UPDATE LEARN SET 
+	LIKEHIT = LIKEHIT+1
+	WHERE LEARN_IDX = #{learnIdx}
+	</update>
+	<!-- 게시글 추천 시 Like 테이블에 insert -->
+	<insert id="insertLike" parameterType="learnLike">
+	INSERT INTO LEARN_LIKE(LIKENO, LEARN_IDX, ID, LIKECHECK, LIKEDATE, LIKECHECK2) 
+	VALUES(LIKENO_SEQ.NEXTVAL, #{learnIdx}, #{id}, 0, SYSDATE, 1)
+	</insert>
+	<!-- 게시글 추천 시 Like2 테이블에 insert -->
+	<insert id="insertLike2" parameterType="learnLike">
+	INSERT INTO LEARN_LIKE2(LIKENO, LEARN_IDX, ID, LIKECHECK, LIKEDATE, LIKECHECK2) 
+	VALUES(LIKENO_SEQ.NEXTVAL, #{learnIdx}, #{id}, 0, SYSDATE, 1)
+	</insert>
+	<!-- 게시글 추천 시 Check를 1로 만들어서 중복방지-->
+	<update id="updateLikeCheck" parameterType="int">
+	UPDATE LEARN_LIKE SET
+	LIKECHECK = 1,
+	LIKECHECK2 = 0
+	WHERE LEARN_IDX = #{learnIdx}
+	</update>
+	<!-- 게시글 추천 시 Check를 1로 만들어서 중복방지-->
+	<update id="updateLearnLikeCheck" parameterType="int">
+	UPDATE LEARN SET
+	LIKECHECK = 1
+	WHERE LEARN_IDX = #{learnIdx}
+	</update>
+	<!-- 추천 조회 -->
+	<select id="selectLearnLike" parameterType="learnLike" resultType="learnLike">
+	SELECT * 
+	FROM LEARN_LIKE
+	WHERE LEARN_IDX = #{learnIdx}
+	</select>
+	<!-- 추천중복방지 카운트 -->
+	<select id="countHeart" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM LEARN_LIKE
+		WHERE
+		ID = #{id}
+		AND LEARN_IDX = #{learnIdx}
+	</select>
+	<!-- 게시글 추천수취소 -->
+	<update id="updateLikeCancel" parameterType="int">
+	UPDATE LEARN SET 
+	LIKEHIT = LIKEHIT-1
+	WHERE LEARN_IDX = #{learnIdx}
+	</update>
+	<!-- 비추천 누를 시 카운트 삭제 -->
+	<delete id="deleteLike" parameterType="learnLike">
+		DELETE FROM LEARN_LIKE 
+		WHERE 
+		ID = #{id} 
+		AND LEARN_IDX = #{learnIdx}
+	</delete>
+	
+	
+	
+	
+	<!--  ========================================================================================================== -->
+	<!-- 관리자 페이지에서 생성 -->
+	<select id="getLearnTotalCount4" resultType="int">
+		SELECT COUNT(*) AS CNT 
+		FROM LEARN
+		WHERE REGDATE2 > SYSDATE
+		ORDER BY LEARN_IDX DESC
+	</select>
+	
+	<select id="getLearnList4" parameterType="map" resultType="learn">
+	 	SELECT *
+	   	  FROM (SELECT ROW_NUMBER() OVER (ORDER BY LEARN_IDX DESC) AS R_NUM,
+	    		 L.* FROM (SELECT *
+	    					  FROM LEARN WHERE REGDATE2 > SYSDATE
+	     			  					 ORDER BY LEARN_IDX ASC
+	            			) L  
+	      		) WHERE R_NUM BETWEEN #{begin} AND #{end}
+	</select> 
+	<!--  ========================================================================================================== -->
+	
+	
+</mapper>
+
+
+
+
+
+

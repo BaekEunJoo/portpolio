@@ -1,0 +1,118 @@
+@charset "UTF-8";
+
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+body a, body a:hover, body a:visited{
+	text-decoration: none;
+    color: #111;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.sub-content-wrap{
+	padding-bottom: 9.375rem;
+}
+.sub-top-area.forms{
+	text-align: center;
+	padding: 5rem 0 3.75rem 0;
+}
+.sub-top-area.container{
+	position: relative;
+    width: 80rem;
+    margin: 0 auto;
+}
+.container.small{
+	width: 25.5rem;
+    margin: 0 auto;
+}
+.sub-top-area.forms h2{
+	font-size: 3rem !important;
+    font-weight: 500 !important;
+    line-height: 1.2;
+    letter-spacing: -0.075rem;
+    text-align: center;
+}
+.container .normal-area{
+	margin-top:1.25rem;
+}
+.container .m-block{
+	display:none;
+}
+.container.small > div:first-child{
+    margin-top: 0;
+}
+	
+.container .normal-area.mt40{
+	margin-top: 2.5rem;
+}
+.container .normal-area.btn-group > div{
+	width: 100%;
+}
+
+.btn-group .btn-area button{
+	min-width:100%;
+}
+
+.btn-area button.primary{
+	background: #111;
+    color: #fff;
+}
+.btn-area button{
+	display: inline-block;
+    min-width: 11.875rem;
+    height: 3.75rem;
+    padding: 0 0.625rem 0;
+    text-align: center;
+    letter-spacing: -0.04063rem;
+    line-height: 3rem;
+}
+.container .normal-area.sns-group{
+	margin-top:3.75rem;
+}
+.container.small > div{
+	margin-top:1.25rem;
+}
+.container .normal-area.sns-group p {
+	text-align:center;
+}
+.container .normal-area.sns-group p span{
+	display: inline-block;
+    padding: 0 1.5625rem;
+    font-size: 1rem;
+    background: #fff;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.025rem;
+    text-align: center;
+    color: #888;
+}
+.container .normal-area.sns-group p span::after{
+	content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: -1;
+    margin-top: -rem(1);
+    display: inline-block;
+    width: 100%;
+    height: 0.125rem;
+    background: #eee;
+}
+
+.container .normal-area.sns-group ul{
+	margin-top: 1.6875rem;
+	padding:0;
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+}
+.container .normal-area.sns-group ul li{
+	margin: 0 0.625rem;
+}
+
+.icons{
+	margin: 0;
+}
+.icons li img{
+	width: 50px;
+	display:block;
+	margin-right: 20px; margin-bottom: 10px; 
+}

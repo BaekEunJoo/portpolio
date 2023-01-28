@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.Imuseum.exhibition.dao.ExhibitionDAO">
+	
+	<!-- 현재전시 보기(기본/최신순) -->
+	<select id="getExhibitionNow" parameterType="exhibitionVO" resultType="exhibitionVO">
+		SELECT * FROM 
+		EXHIBITION
+		WHERE SYSDATE <![CDATA[<]]> LAST_DATE+1
+		ORDER BY START_DATE DESC
+	</select>
+	
+	<!-- 현재전시 보기(오래된순) -->
+	<select id="getExhibitionOld" parameterType="exhibitionVO" resultType="exhibitionVO">
+		SELECT * FROM 
+		EXHIBITION
+		WHERE SYSDATE <![CDATA[<]]> LAST_DATE+1
+		ORDER BY START_DATE
+	</select>
+	
+	<!-- 지난전시 보기 -->
+	<select id="getExhibitionPast" parameterType="exhibitionVO"	resultType="exhibitionVO">
+		SELECT * FROM 
+		EXHIBITION
+		WHERE SYSDATE > LAST_DATE+1
+		ORDER BY EXH_NUM DESC
+	</select>
+	
+	<!-- 지난전시 연도별 보기 -->
+	<select id="exhibitionPastYear" parameterType="exhibitionVO" resultType="exhibitionVO">
+		SELECT * FROM 
+		EXHIBITION
+		WHERE SYSDATE > LAST_DATE+1 AND TO_CHAR(START_DATE,'yyyy-mm-dd') LIKE '%' || #{year} || '%'
+		ORDER BY EXH_NUM DESC
+	</select>
+	
+	<!-- 전시 상세보기 -->
+	<select id="getExhibitionOne" parameterType="exhibitionVO"
+		resultType="exhibitionVO">
+		SELECT * FROM 
+		EXHIBITION
+		WHERE EXH_NUM = #{exhNum}
+	</select>
+	
+	
+	<!-- Admin에서 사용 페이징 -->
+	<!-- 전체 게시글 갯수 조회 -->
+	<select id="ExhibitiontotalCount" resultType="int">
+	SELECT COUNT(*) AS CNT FROM exhibition
+	</select>
+	<select id="getExhibition" parameterType="map"
+		resultType="exhibitionVO">
+		SELECT *
+   	  FROM (SELECT ROW_NUMBER() OVER (ORDER BY exh_num DESC) AS E_NUM,
+    		 e.* FROM (SELECT *
+    					  FROM EXHIBITION
+     			  					 ORDER BY EXH_NUM ASC
+            			) e  
+      		) WHERE E_NUM BETWEEN #{begin} AND #{end}
+	</select>
+	<!-- 달력보기 -->
+	<select id="getExhibitionCal" resultType="exhibitionVO">
+		SELECT * FROM EXHIBITION
+		WHERE START_DATE <![CDATA[<]]>= #{calDay} AND LAST_DATE >= #{calDay}
+		ORDER BY EXH_NUM DESC
+	</select>
+	<!-- 교육 달력보기 -->
+	<select id="getLearnCal" resultType="learn">
+	SELECT * FROM LEARN
+	WHERE TO_DATE(SUBSTR(regdate1,1,7),'yyyy/mm') <![CDATA[<]]>= #{calDay} 
+	AND TO_DATE(SUBSTR(regdate2,1,7),'yyyy/mm') >= #{calDay}
+	ORDER BY LEARN_IDX DESC
+	<!-- SELECT * FROM LEARN
+	WHERE TO_DATE(regdate1,'yyyy/mm/dd') <![CDATA[<]]>= #{calDay} 
+	AND TO_DATE(regdate2,'yyyy/mm/dd') >= #{calDay} -->
+	</select>
+	<select id="getLearnCalAjax" resultType="learn">
+	SELECT * FROM LEARN
+	WHERE TO_DATE(regdate1,'yyyy/mm/dd') <![CDATA[<]]>= #{calDay} 
+	AND TO_DATE(regdate2,'yyyy/mm/dd') >= #{calDay}
+	ORDER BY LEARN_IDX DESC
+	</select>
+	
+	
+	
+	<!-- 전시등록 -->
+	<insert id="insertExhibition" parameterType="exhibitionVO">
+		INSERT INTO EXHIBITION (EXH_NUM, EXH_NAME, START_DATE, LAST_DATE, EXH_INFO,
+								GENRE, PARTNERSHIP, POSTER_IMG, UP_IMG, INFO_IMG, TICKET_IMG)
+		VALUES(EXHB_SEQ.NEXTVAL,#{exhName},#{startDate},#{lastDate},#{exhInfo},
+				#{genre},#{partnership},#{posterImg},#{upImg}, #{infoImg}, #{ticketImg})
+	</insert>
+	
+	
+	<!-- exhibition수정 -->
+	<update id="updateExhibition" parameterType="exhibitionVO">
+		UPDATE EXHIBITION 
+		SET EXH_NAME = #{exhName}, START_DATE = #{startDate}, LAST_DATE = #{lastDate},
+		    EXH_INFO = #{exhInfo}, GENRE = #{genre}, PARTNERSHIP = #{partnership},
+		    POSTER_IMG = #{posterImg}, UP_IMG = #{upImg}, INFO_IMG = #{infoImg}, TICKET_IMG = #{ticketImg}
+		    WHERE EXH_NUM = #{exhNum} 
+	</update>
+	
+	
+	<!-- 전시등록 -->
+	<insert id="insertArtist" parameterType="artistsVO">
+		INSERT INTO ARTISTS (EXH_NUM, ARTIST, ARTIST_INFO, ARTIST_IMAGE, ARTIST_NUM)
+		VALUES(#{exhNum},#{artist},#{artistInfo},#{artistImage}, ARTIST_SEQ.NEXTVAL)
+	</insert>
+	
+	
+	
+	<!-- 전시검색 -->
+	<select id="exhibitionSearch" parameterType="exhibitionVO" resultType="exhibitionVO">
+		SELECT * FROM
+		EXHIBITION
+		WHERE EXH_NAME LIKE '%' || #{searchKeyword} || '%' OR EXH_INFO LIKE '%' || #{searchKeyword} || '%'
+	</select>
+	
+	<!-- 교육검색 -->
+	<select id="learnSearch" parameterType="learn" resultType="learn">
+		SELECT * FROM
+		LEARN
+		WHERE TITLE LIKE '%' || #{searchKeyword} || '%' OR SUBTITLE LIKE '%' || #{searchKeyword} || '%'
+	</select>
+	
+	
+	
+	<!-- Admin에서 작가 목록 보기 사용 -->
+	<select id="getAritsts" parameterType="artistsVO" resultType="artistsVO">
+		SELECT * FROM 
+		VW_EXDETAIL
+		ORDER BY ARTIST
+	</select>
+	
+	<!-- 전시에서 작가 목록 보기 사용 -->
+	<select id="getExAritsts" resultType="artistsVO">
+		SELECT * FROM 
+		VW_EXDETAIL
+		WHERE EXH_NUM = #{exhNum}
+	</select>
+	
+	<!-- Admin에서 작가 목록 보기 사용 -->
+	<select id="getArtistOne" resultType="artistsVO">
+		SELECT * FROM 
+		VW_EXDETAIL
+		WHERE ARTIST_NUM = #{artistNum}
+	</select>
+	
+	<!-- 작가수정 -->
+	<update id="updateArtist" parameterType="artistsVO">
+		UPDATE ARTISTS 
+		SET ARTIST = #{artist}, ARTIST_INFO = #{artistInfo}, ARTIST_IMAGE = #{artistImage}
+		    WHERE ARTIST_NUM = #{artistNum} 
+	</update>
+	
+	<!-- 작가삭제-->
+	<delete id="deleteArtist" parameterType="artistsVO">
+	DELETE FROM ARTISTS WHERE ARTIST_NUM = #{artistNum}
+	</delete>
+	
+</mapper>
+
+
+
+
+
+

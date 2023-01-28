@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+#header {
+	position : fixed;
+	top : 0;
+	overflow : hidden;
+	background-color : #fff;
+	width : 100%;
+	z-index : 1;
+}
+#header .button{
+	border : none;
+	background: transparent;
+}
+#header .button:hover {
+	opacity : 50%;
+}
+#header .top {
+	float : left;
+}
+#header .search {
+	float : right;
+	margin-right:20px;
+}
+/* main 로고 */
+.logo { 
+	text-align : center;
+}

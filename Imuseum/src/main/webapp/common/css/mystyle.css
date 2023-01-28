@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+.notosanskr * { 
+ font-family: 'Noto Sans KR', sans-serif;
+}
+
+.nav-item {
+	color: black;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.gray {
+	font-weight: normal;
+	font-size: medium;
+}
+
+.accordion {
+	position: sticky;
+	 top: 50px; 
+}

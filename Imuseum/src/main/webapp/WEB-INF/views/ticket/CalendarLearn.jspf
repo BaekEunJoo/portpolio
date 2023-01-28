@@ -1,0 +1,309 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.spring.Imuseum.ticket.LearnTicketVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Calendar"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%
+Calendar cal = Calendar.getInstance();
+
+String strYear = request.getParameter("year");
+String strMonth = request.getParameter("month");
+
+int year = cal.get(Calendar.YEAR);
+int month = cal.get(Calendar.MONTH);
+int date = cal.get(Calendar.DATE);
+
+if(strYear != null)
+{
+  year = Integer.parseInt(strYear);
+  month = Integer.parseInt(strMonth);
+  
+}else{
+
+}
+//년도/월 셋팅
+cal.set(year, month, 1);
+
+int startDay = cal.getMinimum(java.util.Calendar.DATE);
+int endDay = cal.getActualMaximum(java.util.Calendar.DAY_OF_MONTH);
+int start = cal.get(java.util.Calendar.DAY_OF_WEEK);
+int newLine = 0;
+
+//오늘 날짜 저장
+Calendar todayCal = Calendar.getInstance();
+SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+int intToday = Integer.parseInt(sdf.format(todayCal.getTime()));
+
+
+%>
+<style>
+	body {
+	margin-left:"0px"; margin-right:"0px"; margin-top:"0px"; margin-bottom:"0px";
+	}
+	.card-body td {font-size: 10pt; color:#595959;}
+	.card-body th {font-size: 9pt; color:#000000;}
+	.card-body select {font-size: 9pt; color:#595959;}
+
+	.divDotText {
+	overflow:hidden;
+	text-overflow:ellipsis;
+	}
+
+ 	.clicked {
+ 		background-color: gold;
+        /* box-shadow: 0 0 0 6px black inset; */
+     }
+
+</style>
+<div id="content" style="width:100%;">
+
+<!--날짜 네비게이션-->
+<table width="100%" border="0" cellspacing="1" cellpadding="1" id="KOO">
+
+<tr>
+<td height="60">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+	<td height="10">
+	</td>
+</tr>
+
+<tr>
+	<td align="center" style="font-size: 2em; font-weight: bold;">
+		<%if(month > 0 ){ %>
+		<a href="<c:url value='ticketLearn.do' />?learnIdx=${learn.learnIdx }&amp;year=<%=year%>&amp;month=<%=month-1%>" target="_self" style="text-decoration: none;">
+			<b><i class="bi bi-chevron-left" style="color: black;"></i></b><!-- 이전달 -->
+		</a>
+		<%} else if(month == 0){%>
+		<a href="<c:url value='ticketLearn.do' />?learnIdx=${learn.learnIdx }&amp;year=<%=year-1%>&amp;month=<%=11%>" target="_self" style="text-decoration: none;">
+			<b><i class="bi bi-chevron-left" style="color: black;"></i></b><!-- 이전달 -->
+		</a>
+		<%} else {%>
+			<b><i class="bi bi-chevron-left"></i></b>
+		<%} %>
+		<%=year%>.
+		<%=month+1%>
+		<%if(month < 11){ %>
+		<a href="<c:url value='ticketLearn.do' />?learnIdx=${learn.learnIdx }&amp;year=<%=year%>&amp;month=<%=month+1%>" target="_self">
+			<!-- 다음달 --><b><i class="bi bi-chevron-right" style="color: black;"></i></b>
+		</a>
+		<%}else if(month == 11){ %>
+		<a href="<c:url value='ticketLearn.do' />?learnIdx=${learn.learnIdx }&amp;year=<%=year+1%>&amp;month=<%=0%>" target="_self">
+			<!-- 다음달 --><b><i class="bi bi-chevron-right" style="color: black;"></i></b>
+		</a>
+		<%}%>
+		</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+<br>
+<table border="0" cellspacing="1" cellpadding="1" bgcolor="#FFFFFF">
+<thead>
+<tr style="height: 30px;">
+	<td width='100px'>
+	<div align="center"><font color="#ED2A61">SUN</font></div>
+	</td>
+	<td width='100px'>
+	<div align="center">MON</div>
+	</td>
+	<td width='100px'>
+	<div align="center">TUE</div>
+	</td>
+	<td width='100px'>
+	<div align="center">WED</div>
+	</td>
+	<td width='100px'>
+	<div align="center">THU</div>
+	</td>
+	<td width='100px'>
+	<div align="center">FRI</div>
+	</td>
+	<td width='100px'>
+	<div align="center"><font color="#3C6FFA">SAT</font></div>
+	</td>
+</tr>
+</thead>
+<tr>
+
+<c:set var="Ldate" value="${learn.regdate2 }" /> <!-- 마감일 -->
+<c:set var="maxmember" value="${learn.memberNumber }" /> <!-- 정원 -->
+<c:set var="memberList" value="${memberList }"/>
+
+
+
+<%
+Map<Integer, Integer> map = new HashMap<>();
+List<LearnTicketVO> memberlist = (List<LearnTicketVO>)pageContext.getAttribute("memberList");
+
+if (!memberlist.isEmpty()) {
+	
+System.out.println(pageContext.getAttribute("memberList"));
+//List<LearnTicketVO> memberlist = (List<LearnTicketVO>)pageContext.getAttribute("memberList");
+
+System.out.println(memberlist.get(0));
+System.out.println(memberlist.get(0).getRevDate());
+
+
+for (int i = 0; i < memberlist.size(); i++){
+	memberlist.get(i).setRevDate(memberlist.get(i).getRevDate().substring(0,10).replace("-", ""));
+}
+
+for (LearnTicketVO item : memberlist) {
+    map.put(Integer.parseInt(item.getRevDate()), item.getSum());
+}
+
+System.out.println(map);
+System.out.println(map.get(20221206));
+
+}
+
+
+
+//-----------------------------
+
+//처음 빈공란 표시
+for(int index = 1; index < start ; index++ )
+{
+  out.println("<td>&nbsp;</td>");
+  newLine++;
+}
+
+for(int index = 1; index <= endDay; index++) {
+	String color = "";
+
+	if(newLine == 0){
+		color = "#ED2A61";
+	} else if(newLine == 6){ 	
+		color = "#3C6FFA";
+	}else {
+		color = "gray"; 
+	};
+	
+	String sUseDate = Integer.toString(year);
+
+	sUseDate += Integer.toString(month+1).length() == 1 ? "0" + Integer.toString(month+1) : Integer.toString(month+1);
+	sUseDate += Integer.toString(index).length() == 1 ? "0" + Integer.toString(index) : Integer.toString(index);
+
+	int iUseDate = Integer.parseInt(sUseDate);
+	
+	
+	String Ldate = (String)pageContext.getAttribute("Ldate");
+	Ldate = Ldate.replaceAll("/",""); //마감일 
+	
+	int lastDate = Integer.parseInt(Ldate); //전시마감일
+	
+	
+	
+	String membermax = (String)pageContext.getAttribute("maxmember");
+	membermax = membermax.trim();
+    int idx = membermax.indexOf("명"); 
+    int maxmember = Integer.parseInt(membermax.substring(0, idx)); //교육정원
+	
+	String backColor = "white";
+	if (iUseDate < intToday || iUseDate > lastDate) {
+		backColor = "#F6F6F6";
+	} 
+	
+	if (map.get(iUseDate) != null && map.get(iUseDate) == maxmember){
+		backColor = "#F6F6F6";
+	}
+	
+	if (map.get(iUseDate) != null && map.get(iUseDate) < maxmember){
+		System.out.println(iUseDate + "남은 자리수 : " + (maxmember-map.get(iUseDate)));
+	}
+	
+	
+	if(iUseDate < intToday || iUseDate > lastDate){
+	out.println("<td valign='middle' align='center' bgcolor='"+backColor+"' nowrap style='width:50px; height:50px; border: 1px solid #EAEAEA;'>");
+	} else if (map.get(iUseDate) != null && map.get(iUseDate) == maxmember) {
+	out.println("<td valign='middle' align='center' bgcolor='"+backColor+"' nowrap style='width:50px; height:50px; border: 1px solid #EAEAEA;'>");
+	}
+	else if (map.get(iUseDate) != null && map.get(iUseDate) < maxmember) {
+	out.println("<td class='oneday' id='"+iUseDate+"' valign='middle' align='center' bgcolor='"+backColor+"' nowrap onclick='check(this.id,"+(maxmember-map.get(iUseDate))+")' style='cursor: pointer; width:50px; height:50px; border: 1px solid #EAEAEA;'>");
+	}
+	else {
+	out.println("<td class='oneday' id='"+iUseDate+"' valign='middle' align='center' bgcolor='"+backColor+"' nowrap onclick='check(this.id)' style='cursor: pointer; width:50px; height:50px; border: 1px solid #EAEAEA;'>");
+	}
+	out.println(index); //날짜표시 
+	//기능 제거
+	out.println("</td>");
+	newLine++;
+
+	if(newLine == 7)
+	{
+	  out.println("</tr>");
+	  if(index <= endDay)
+	  {
+	    out.println("<tr>");
+	  }
+	  newLine=0;
+	}
+}
+//마지막 공란 LOOP
+while(newLine > 0 && newLine < 7)
+{
+  out.println("<td>&nbsp;</td>");
+  newLine++;
+}
+%>
+</tr>
+
+
+<script>
+	function check(a) {
+		console.log(a);
+		$('#selectDate').val(a);
+	}
+	
+	function check(a,b) {
+		console.log(a);
+		$('#selectDate').val(a);
+		$('#posNumber').val(b);
+		
+	}
+	
+	
+	
+	var oneday = document.getElementsByClassName("oneday");
+
+    function handleClick(event) {
+      //console.log(event.target);
+      // console.log(this);
+      // 콘솔창을 보면 둘다 동일한 값이 나온다
+
+      //console.log(event.target.classList);
+
+      if (event.target.classList[1] === "clicked") {
+        event.target.classList.remove("clicked");
+      } else {
+        for (var i = 0; i < oneday.length; i++) {
+          oneday[i].classList.remove("clicked");
+        }
+
+        event.target.classList.add("clicked");
+      }
+    }
+
+    function init() {
+      for (var i = 0; i < oneday.length; i++) {
+        oneday[i].addEventListener("click", handleClick);
+      }
+    }
+
+    init();
+	
+	
+	
+</script>
+
+</table>
+</div>

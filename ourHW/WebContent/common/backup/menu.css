@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+#container {text-align : center; margin-top : 90px; margin-bottom : 10px; background-color : #fff;}
+ul, ol, li { list-style:none; margin:0; padding:0; }
+ul.myMenu > li { display:inline-block; padding : 5px 10px; width:150px; text-align:center; position:relative; margin:0;}
+ul.myMenu > li:hover { background:#eee; }
+ul.myMenu > li ul.submenu { display:none; position:absolute; top:30px; left:0; }
+ul.myMenu > li ul.submenu > li { display:inline-block; width:150px; padding:5px 10px; border:1px solid #eee; background:#eee; text-align:center; }
+ul.myMenu > li:hover ul.submenu { display : block; overflow:hidden;}
+ul.myMenu > li ul.submenu > li:hover { background:#fff; }

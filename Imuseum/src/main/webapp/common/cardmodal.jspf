@@ -1,0 +1,86 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<div class="modal" id="modal">
+				<div class="modal_body">
+					<div class="m_head">
+						<div class="modal_title">카드사 무이자할부 안내</div>
+						<div class="close_btn" id="close_btn">X</div>
+					</div>
+					<div class="m_body">
+						<div data-v-9a980cc6="" class="layer-body">
+							<div data-v-9a980cc6="">
+								<div data-v-9a980cc6="" class="tbl-board">
+									<table data-v-9a980cc6="">
+										<colgroup data-v-9a980cc6="">
+											<col data-v-9a980cc6="" style="width: 34%;">
+											<col data-v-9a980cc6="" style="width: 33%;">
+											<col data-v-9a980cc6="" style="width: 33%;">
+										</colgroup>
+										<thead data-v-9a980cc6="">
+											<tr data-v-9a980cc6="">
+												<th data-v-9a980cc6="">카드사</th>
+												<th data-v-9a980cc6="">할부적용금액</th>
+												<th data-v-9a980cc6="">할부개월</th>
+											</tr>
+										</thead>
+										<tbody data-v-9a980cc6="">
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">삼성카드</td>
+												<td data-v-9a980cc6="">1만원 이상</td>
+												<td data-v-9a980cc6="">2~4개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">신한카드</td>
+												<td data-v-9a980cc6="">1만원 이상</td>
+												<td data-v-9a980cc6="">2~6개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">비씨카드</td>
+												<td data-v-9a980cc6="">1만원 이상</td>
+												<td data-v-9a980cc6="">2~6개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">롯데카드</td>
+												<td data-v-9a980cc6="">1만원 이상</td>
+												<td data-v-9a980cc6="">2~6개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">현대카드</td>
+												<td data-v-9a980cc6="">1만원 이상</td>
+												<td data-v-9a980cc6="">2~6개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">KB국민카드</td>
+												<td data-v-9a980cc6="">1만원 이상</td>
+												<td data-v-9a980cc6="">2~12개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">NH농협카드</td>
+												<td data-v-9a980cc6="">5만원 이상</td>
+												<td data-v-9a980cc6="">2~12개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">하나카드</td>
+												<td data-v-9a980cc6="">5만원 이상</td>
+												<td data-v-9a980cc6="">2~6개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">전북카드</td>
+												<td data-v-9a980cc6="">5만원 이상</td>
+												<td data-v-9a980cc6="">2~6개월</td>
+											</tr>
+											<tr data-v-9a980cc6="">
+												<td data-v-9a980cc6="">광주카드</td>
+												<td data-v-9a980cc6="">5만원 이상</td>
+												<td data-v-9a980cc6="">2~6개월</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="m_footer">
+				      <div class="modal_btn cancle" id="close_btn">CLOSE</div>
+				    </div>
+				</div>
+			</div>

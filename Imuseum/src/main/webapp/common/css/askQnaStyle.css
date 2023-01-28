@@ -1,0 +1,75 @@
+@charset "UTF-8";
+
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+.filebox {
+	text-align: center;
+	
+}
+
+.filebox .upload-display {  /* 이미지가 표시될 지역 */
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+@media(min-width: 768px) { 
+  .filebox .upload-display {
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 0;
+  }
+}
+
+.filebox .upload-thumb-wrap {  /* 추가될 이미지를 감싸는 요소 */
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 10px;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.filebox .upload-display img {  /* 추가될 이미지 */
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+.file-notice{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.file-notice li{
+	position: relative;
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+    letter-spacing: -0.02187rem;
+}
+select{
+	width: 100%;
+	height: 50px;
+}
+
+.filebox label {
+  display: inline-block;
+  padding: .5em .75em;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #fdfdfd;
+  cursor: pointer;
+  border-radius: .25em;
+}
+
+.filebox input[type="file"] {  /* 파일 필드 숨기기 */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip:rect(0,0,0,0);
+  border: 0;
+}

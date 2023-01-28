@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wishDAO">
+
+	<select id="getWishList" parameterType="string" resultType="wish">
+		SELECT * 
+		FROM VW_WISH
+		WHERE ID = #{id}
+		ORDER BY WISH_NUM DESC
+	</select>
+		
+	<select id="getWishCnt" parameterType="string" resultType="int" >
+		SELECT COUNT(PRODUCT_NUM) 
+		FROM VW_WISH
+        WHERE ID = #{id}
+	</select>
+	
+	<insert id="insertWish" parameterType="wish" >
+		INSERT INTO WISHLIST (WISH_NUM, PRODUCT_NUM, ID)
+		VALUES(WISH_SEQ.NEXTVAL, #{productNum}, #{id})
+	</insert>
+	
+	<delete id="deleteWish">
+		DELETE FROM WISHLIST
+		WHERE ID = #{id}
+		AND PRODUCT_NUM = #{productNum}
+	</delete>
+	
+	<select id="wishCheck" resultType="wish">
+		SELECT * 
+		FROM VW_WISH
+		WHERE ID = #{id}
+		AND PRODUCT_NUM = #{productNum}
+	</select>
+	
+	<!-- 마이페이지 위시 삭제 -->
+	<delete id="deleteMyWish" parameterType="int">
+		DELETE FROM WISHLIST
+		WHERE WISH_NUM = #{wishNum}
+	</delete>
+</mapper>
+
+
+
+
+
+

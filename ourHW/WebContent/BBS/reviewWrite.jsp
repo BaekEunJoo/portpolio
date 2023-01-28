@@ -1,0 +1,98 @@
+<%@page import="com.mystudy.project.vo.QAVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function insert_review(frm) {
+	if ("${user.userId}" == null) {
+		if(confirm("회원 전용 서비스입니다\n 로그인하시겠습니까?")){
+			location.href="/ourHW/signup/login.jsp";
+			return false;
+		} else {
+			return false;
+		}
+	} else {
+		
+		if (frm.title.value.trim() == "" || frm.title.value.trim() == "" ) {
+			alert("제목과 내용은 한 글자 이상 입력해 주셔야 합니다"); 
+			return false;
+		} else {
+			if (frm.productNo.value.trim() == "") {
+				alert("리뷰 작성의 경우 제품을 필수로 선택해 주세요"); 
+				return false;
+			} else {
+				frm.submit();
+				
+			}
+		}
+	}
+}
+
+</script>
+</head>
+<body>
+<div class="container align-content-center">
+
+	<%@ include file="/common/header.jsp" %>
+	<p class="py-3"></p>
+	<div id="bbsReview" class="container">
+	<div>
+		<form action="BBSController">
+			<table class="table table-striped text-center mx-auto border-0 w-100 p-3">
+			<colgroup>
+				<col style="width: 20%;">
+	 		</colgroup>
+			<thead>
+			<tr>
+				<td colspan="2"><strong>상품 리뷰 작성</strong></td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<th>제목</th>
+				<td><input type="text" name="title" size="120" class="border-0 bg-transparent text-left"></td>
+			</tr>
+			<tr>
+				<th>제품번호</th>
+				<td><input type="text" name="productNo" size="120" class="border-0 bg-transparent text-left"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				<textarea name="content" rows="6" style="width:100%;" class="border-0 bg-transparent text-left"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>첨부파일</th>
+				<td class="text-left"><input type="file" name="filename"></td>
+			</tr>
+			</tbody>
+			<tr>
+				<td colspan="2">
+					<input type="hidden" name="type" value="insertReview">
+					<input type="hidden" name="userId" value=${user.userId }>
+					<input type="hidden" name="userName" value=${user.name }>
+					<input type="button" onclick="insert_review(this.form)" value="작성" class="btn btn-outline-dark">
+					<input type="button" onclick="history.back()" value="목록으로 돌아가기" class="btn btn-outline-dark">
+				</td>
+			</tr>
+			</table>
+		</form>
+		
+	</div>
+</div>
+
+<footer>
+<%@ include file="/common/footer.jspf" %>
+</footer>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="project">
+
+<select id="selectCategoryNo" parameterType="string" resultType="String">
+	SELECT CATEGORY_NO
+	FROM CATEGORY
+	WHERE CATEGORY_NAME = #{category}
+</select>
+
+<select id="selectTotalCount" parameterType="String" resultType="int">
+	SELECT COUNT(*) 
+	FROM PRODUCT
+	WHERE CATEGORY_NO = #{categoryNo}
+</select>
+
+<select id="selectBest" resultType="com.mystudy.project.vo.ProductVO">
+	SELECT P.*
+	FROM PRODUCT P, (SELECT SUM(AMOUNT) SUM, PRODUCT_NO FROM ORDER_DETAIL GROUP BY PRODUCT_NO) D
+	WHERE P.PRODUCT_NO = D.PRODUCT_NO
+	<![CDATA[AND ROWNUM <= 9]]>
+	ORDER BY D.SUM DESC
+</select>
+
+<select id="selectNewest" resultType="com.mystudy.project.vo.ProductVO">
+	SELECT ROWNUM, P.*
+	FROM (SELECT * FROM PRODUCT P ORDER BY PRODUCT_NO DESC) P
+	<![CDATA[ WHERE ROWNUM <= 9]]>
+</select>
+
+
+<select id="selectListNew" parameterType="map" resultType="com.mystudy.project.vo.ProductVO">
+	SELECT *
+	FROM ( SELECT ROWNUM R_NUM, P.*
+	       FROM (SELECT * FROM PRODUCT ORDER BY PRODUCT_NO DESC ) P
+	      )
+	WHERE CATEGORY_NO = #{categoryNo}
+	AND R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
+<select id="selectListPrice" parameterType="map" resultType="com.mystudy.project.vo.ProductVO">
+	SELECT *
+	FROM ( SELECT ROWNUM R_NUM, P.*
+	       FROM (SELECT * FROM PRODUCT ORDER BY PRICE ) P
+	      )
+	WHERE CATEGORY_NO = #{categoryNo}
+	AND R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
+<select id="selectListName" parameterType="map" resultType="com.mystudy.project.vo.ProductVO">
+	SELECT *
+	FROM ( SELECT ROWNUM R_NUM, P.*
+	       FROM (SELECT * FROM PRODUCT ORDER BY PRODUCT_NAME ) P
+	      )
+	WHERE CATEGORY_NO = #{categoryNo}
+	AND R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
+<select id="selectProductVO" parameterType="string" resultType="com.mystudy.project.vo.ProductVO">
+	SELECT *
+	FROM PRODUCT
+	WHERE PRODUCT_NO = #{productNo}
+</select>
+
+
+<select id="selectProductOption" parameterType="string" resultType="com.mystudy.project.vo.SizeVO">
+	SELECT *
+	FROM PRODUCT_OPTION
+	WHERE PRODUCT_NO = #{productNo}
+</select>
+
+
+<select id="selectReview" parameterType = "map" resultType="com.mystudy.project.vo.ReviewVO">
+	SELECT O.*
+	FROM ( SELECT ROWNUM R_NUM, R.*
+	       FROM (SELECT * 
+	       		FROM REVIEW 
+	       		WHERE PRODUCT_NO = #{productNo}
+	       		ORDER BY REVIEW_NO DESC) R
+	     ) O
+	WHERE R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
+<select id="selectTotalReviewCount" parameterType="string" resultType="int">
+	SELECT COUNT(*) 
+	FROM REVIEW
+	WHERE PRODUCT_NO = #{productNo}
+</select>
+
+<select id="selectTotalQACount" parameterType="string" resultType="int">
+	SELECT COUNT(*) 
+	FROM QA
+	WHERE PRODUCT_NO = #{productNo}
+</select>
+
+<select id="selectQA" parameterType = "map" resultType="com.mystudy.project.vo.QAVO">
+	SELECT O.*
+	FROM ( SELECT ROWNUM R_NUM, Q.*
+	       FROM (SELECT * 
+	            FROM QA 
+	            WHERE PRODUCT_NO = #{productNo}
+	            ORDER BY QNA_NO DESC) Q
+	     ) O
+	WHERE R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
+ 
+<select id="selectOptionNo" parameterType="map" resultType="string">
+	SELECT OPTION_NO
+	FROM PRODUCT_OPTION
+	WHERE PRODUCT_NO = #{productNo}
+	AND OPTION_SIZE = #{productOption}
+</select>
+
+<insert id="insertCart" parameterType="map">
+	INSERT INTO CART
+        	(CART_NO, OPTION_NO, USER_ID, AMOUNT, PRICE)
+	VALUES  (CART_NO_SEQ.NEXTVAL, #{optionNo}, #{userId}, #{amount}, #{price})
+</insert>
+
+
+<select id="selectLikeProduct" parameterType="map" resultType="com.mystudy.project.vo.LikeVO">
+
+	SELECT * 
+	FROM LIKE_PRODUCT
+	WHERE USER_ID = #{userId}
+	AND PRODUCT_NO = #{productNo}
+
+</select>
+
+<select id="selectCartList" parameterType="string" resultType="com.mystudy.project.vo.CartListVO">
+	SELECT C.USER_ID, C.CART_NO, P.PRODUCT_NAME, P.THUMNAIL, P.PRICE, C.AMOUNT, C.AMOUNT*P.PRICE AS TOTAL, O.OPTION_SIZE, P.PRODUCT_NO
+	FROM CART C, PRODUCT P, PRODUCT_OPTION O
+	WHERE C.OPTION_NO = O.OPTION_NO
+	AND O.PRODUCT_NO = P.PRODUCT_NO
+	AND C.USER_ID = #{userId}
+	ORDER BY CART_NO DESC
+</select>
+
+<select id="selectCartListVO" parameterType="string" resultType="com.mystudy.project.vo.CartListVO">
+	SELECT *
+	FROM CART_LIST
+	WHERE CART_NO = ${cartNo}
+</select>
+
+<delete id="deleteCart" parameterType="string">
+	DELETE CART
+	WHERE CART_NO = #{cartNo}
+</delete>
+
+<update id="updateQtyCart" parameterType="map">
+	UPDATE CART
+	SET AMOUNT = #{amount}
+	WHERE CART_NO = #{cartNo}
+	AND USER_ID = #{userId}
+</update>
+
+<delete id="deleteCartAll">
+	DELETE CART
+	WHERE USER_ID = #{userID}
+</delete>
+
+
+<insert id="inserLikeProduct" parameterType="map">
+	INSERT INTO LIKE_PRODUCT
+        (LIKE_NO, PRODUCT_NO, USER_ID, LDATE)
+    VALUES (LIKE_NO_SEQ.NEXTVAL, #{productNo}, #{userId}, SYSDATE)
+</insert>
+
+<delete id="deleteLikeProduct" parameterType="map">
+	DELETE LIKE_PRODUCT
+	WHERE USER_ID = #{userId}
+	AND PRODUCT_NO = #{productNo}
+</delete>
+
+<select id="selectCartPrice" parameterType="string" resultType="int">
+	SELECT PRICE
+	FROM CART
+	WHERE CART_NO = #{cartNo}
+</select>
+
+
+<select id="seleteTotalQACnt" resultType="int">
+	SELECT COUNT(*) FROM QA
+</select>
+
+
+<select id="seleteQAList" parameterType="map" resultType="com.mystudy.project.vo.QAVO">
+	SELECT O.*
+	FROM (SELECT ROWNUM R_NUM, Q.*
+	       FROM (SELECT * 
+	            FROM QA 
+	            ORDER BY QNA_NO DESC) Q
+	     ) O
+	WHERE R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
+<select id="seleteTotalReviewCnt" resultType="int">
+	SELECT COUNT(*) FROM REVIEW
+</select>
+
+<select id="seleteReviewList" resultType="com.mystudy.project.vo.ReviewVO">
+	SELECT O.*
+	FROM (SELECT ROWNUM R_NUM, Q.*
+	       FROM (SELECT * 
+	            FROM REVIEW
+	            ORDER BY REVIEW_NO DESC) Q
+	     ) O
+	WHERE R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
+<select id="selectQADetail" parameterType="string" resultType="com.mystudy.project.vo.QAVO">
+SELECT * FROM QA
+WHERE QNA_NO = #{qnaNo}
+</select>
+
+<update id="addQAHit" parameterType="string">
+UPDATE QA
+SET HIT= HIT+1
+WHERE QNA_NO = #{qnaNo}
+</update>
+
+
+<delete id="deleteQA" parameterType="string">
+DELETE QA
+WHERE QNA_NO = #{qnaNo}
+</delete>
+
+<insert id="insertQA" parameterType="com.mystudy.project.vo.QAVO">
+	INSERT INTO QA
+	(QNA_NO, TITLE, CONTENT, USER_ID, USER_NAME, WDATE, PRODUCT_NO)
+	VALUES (QNA_NO_SEQ.NEXTVAL, #{title}, #{content}, #{userId}, #{userName}, SYSDATE, #{productNo})
+</insert>
+
+<update id="updateQA" parameterType="com.mystudy.project.vo.QAVO">
+	UPDATE QA
+	SET TITLE = #{title},
+    CONTENT = #{content},
+    PRODUCT_NO = #{productNo}
+	WHERE QNA_NO = #{qnaNo}
+</update>
+
+
+
+<select id="selectReviewDetail" parameterType="string" resultType="com.mystudy.project.vo.ReviewVO">
+	SELECT * FROM REVIEW
+	WHERE REVIEW_NO = #{reviewNo}
+</select>
+
+
+<update id="addReviewHit" parameterType="string">
+	UPDATE REVIEW
+	SET HIT= HIT+1
+	WHERE REVIEW_NO = #{reviewNo}
+</update>
+
+<delete id="deleteReview" parameterType="string">
+	DELETE REVIEW
+	WHERE REVIEW_NO = #{reviewNo}
+</delete>
+
+<update id="updateReview" parameterType="com.mystudy.project.vo.ReviewVO">
+	UPDATE REVIEW
+	SET TITLE = #{title},
+    CONTENT = #{content},
+    PRODUCT_NO = #{productNo}
+	WHERE review_NO = #{reviewNo}
+</update>
+
+
+<insert id="insertReview" parameterType="com.mystudy.project.vo.ReviewVO">
+	INSERT INTO REVIEW
+	(REVIEW_NO, TITLE, CONTENT, USER_ID, USER_NAME, WDATE, PRODUCT_NO)
+	VALUES (REVIEW_NO_SEQ.NEXTVAL, #{title}, #{content}, #{userId}, #{userName}, SYSDATE, #{productNo})
+</insert>
+
+
+
+</mapper>

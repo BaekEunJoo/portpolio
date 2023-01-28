@@ -1,0 +1,164 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+    <nav class="navbar navbar-expand-sm border-bottom notosanskr sticky-top bg-white">
+	<ul class="navbar-nav">
+	    <li class="nav-item">
+	    	<a href="goHome.do" style="margin-left: 40px;"> <!-- index 페이지로 -->
+				<img alt="I MUSEUM" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2F2zG8i%2FbtrRmTJYT7o%2FuBEvZDEkwHQoNMDby5KaR0%2Fimg.png" width="45px;">
+			</a>
+	    </li>
+	</ul>
+	<ul class="navbar-nav flex-fill d-flex justify-content-center">
+	    <li class="nav-item mr-5">
+	    	<a class="nav-link" id="visit"
+	    		data-toggle="collapse" href="#visit-hover" aria-expanded="false"
+	    		style="color: black;">VISIT</a>
+	    </li>
+	    <li class="nav-item mr-5">
+	    	<a class="nav-link" id="exhibition" 
+	    		data-toggle="collapse" href="#exhibition-hover" aria-expanded="false"
+	    		style="color: black;">EXHIBITION</a>
+	    <li class="nav-item mr-5">	    	
+	    	<a class="nav-link" id="learn" 
+	    		data-toggle="collapse" href="#learn-hover" aria-expanded="false"
+	    		style="color: black;">LEARN</a>
+	    </li>
+	    <li class="nav-item mr-5">
+	    	<a class="nav-link" href="ExticketList.do" style="color: black;">TICKET</a>
+	    </li>
+	    <li class="nav-item mr-5">
+	    	<a class="nav-link" id="shop" 
+	    		data-toggle="collapse" href="#shop-hover" aria-expanded="false" 
+	    		style="color: black;">SHOP</a>
+	    </li>
+	</ul>
+	<%
+	SimpleDateFormat mat = new SimpleDateFormat("yyyy-MM");
+	Date noww = new Date();
+	String now_dtt = mat.format(noww) + "-01";
+	%>
+	<ul class="navbar-nav">
+	    <li class="nav-item">
+		<i class="bi bi-calendar2-week" onclick="location.href='calender.do?calDay=<%=now_dtt %>'"
+			style="font-size: 1.5em; cursor: pointer; margin-right: 20px;"></i>
+	    </li>
+	    <li class="nav-item">
+		<i class="bi bi-search" id="search" 
+			data-toggle="collapse" href="#search-hover" aria-expanded="false"
+			style="font-size: 1.5em; cursor: pointer; margin-right: 40px;"></i>
+	    </li>
+	</ul>
+</nav>
+
+
+
+<div class="accordion" id="accordionExample">
+	<div class="collapse" id="visit-hover" data-parent="#accordionExample">
+		<div class="notosanskr d-flex justify-content-center" 
+			style="background-color: white; padding: 20px;">
+			<span>
+				<a class="nav-link" href="visit.do" style="color: silver;">미술관 소개</a>
+			</span>
+			<span>
+				<a class="nav-link" href="us.do" style="color: silver;">오시는 길</a>
+			</span>
+		</div>
+	</div>
+
+	<div class="collapse" id="exhibition-hover" data-parent="#accordionExample">
+		<div class="notosanskr d-flex justify-content-center" 
+			style="background-color: white; padding: 20px; ">
+			<span>
+				<a class="nav-link" href="exhibitionNow.do" style="color: silver;">현재 전시</a>
+			</span>
+			<span>
+				<a class="nav-link" href="exhibitionPast.do" style="color: silver;">지난 전시</a>
+			</span>
+		</div>
+	</div>
+	
+	<div class="collapse" id="learn-hover" data-parent="#accordionExample">
+		<div class="notosanskr d-flex justify-content-center" 
+			style="background-color: white; padding: 20px; ">
+			<span>
+				<a class="nav-link" href="getLearnList.do" style="color: silver;">전체보기</a>
+			</span>
+			<span>
+				<a class="nav-link" href="categoryLearn.do?categoryNum=1" style="color: silver;">유아</a>
+			</span>
+			<span>
+				<a class="nav-link" href="categoryLearn.do?categoryNum=2" style="color: silver;">어린이</a>
+			</span>
+			<span>
+				<a class="nav-link" href="categoryLearn.do?categoryNum=3" style="color: silver;">청소년</a>
+			</span>
+			<span>
+				<a class="nav-link" href="categoryLearn.do?categoryNum=4" style="color: silver;">대학생</a>
+			</span>
+			<span>
+				<a class="nav-link" href="categoryLearn.do?categoryNum=5" style="color: silver;">성인</a>
+			</span>
+			<span>
+				<a class="nav-link" href="categoryLearn.do?categoryNum=6" style="color: silver;">교사</a>
+			</span>
+			<span>
+				<a class="nav-link" href="categoryLearn.do?categoryNum=7" style="color: silver;">전시해설</a>
+			</span>
+		</div>
+	</div>
+	
+	<div class="collapse" id="shop-hover" data-parent="#accordionExample">
+		<div class="notosanskr d-flex justify-content-center" 
+			style="background-color: white; padding: 20px; ">
+			<span>
+				<a class="nav-link" href="ProductList.do" style="color: silver;">SHOP MAIN</a>
+			</span>
+			<span>
+				<a class="nav-link" href="GoodsList.do" style="color: silver;">EXHIBITION GOODS</a>
+			</span>
+			<span>
+				<a class="nav-link" href="EditionsList.do" style="color: silver;">EDITION</a>
+			</span>
+		</div>
+	</div>	
+	
+	<div class="collapse" id="search-hover" data-parent="#accordionExample">
+		<div style="background-color: white; padding: 50px; ">
+		<div class="notosanskr d-flex justify-content-center" style="padding-top: 20px;">
+			<form action="search.do" name="searchForm" method="post">
+			<input type="text" placeholder="검색어를 입력하세요" name="searchKeyword" id="keyword"
+				style="width: 500px; border: none; border-bottom: 2px solid black; outline: none;">
+			</form>	
+			<i class="bi bi-search" onclick="searchchk()"
+			style="font-size: 1.5em; cursor: pointer; margin-left: 10px;"></i>
+		</div>
+		<div>
+			<p id="tworowck" style="margin-left: 635px; color: #ED0000; font-size: 0.8em; visibility:hidden;">
+					2글자 이상의 검색어를 입력하세요.
+			</p>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+	
+	function searchchk() {
+		var f = document.searchForm;
+		var keyword = $("#keyword").val();
+		//alert(keyword.length);
+		
+		if(keyword.length < 2){
+			var h2 = document.getElementById('tworowck');
+			h2.style.visibility = "visible";
+			//alert('2글자 이상의 검색어를 입력하세요.');
+		} else {
+			f.submit();
+		}
+	}
+
+</script>

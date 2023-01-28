@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cartDAO">
+
+	<select id="getCartList" parameterType="string" resultType="cart">
+		SELECT * FROM VW_CART
+		WHERE ID = #{id}
+		ORDER BY CART_NUM DESC
+	</select>
+		
+	<select id="getCartCnt" parameterType="string" resultType="int" > <!--////////////////////////////////////// 수정 -->
+		SELECT COUNT(*) 
+		FROM VW_CART
+        WHERE ID = #{id}
+	</select>
+	
+	<select id="cntCheck" parameterType="cart" resultType="int" >
+		SELECT CNT
+		FROM PRODUCT_OPTION
+		WHERE PRODUCT_NUM = #{productNum}
+		AND OPTION_NAME = #{productOption}
+	</select>
+	
+	<select id="getOption" parameterType="int" resultType="string">
+		SELECT LISTAGG(OPTION_NAME, ',') WITHIN GROUP(ORDER BY OPTION_NAME) AS OPTION_NAME
+		FROM PRODUCT_OPTION
+		WHERE PRODUCT_NUM = #{productNum}
+	</select>
+	
+	<insert id="insertCart" parameterType="cart" >
+		INSERT INTO CART (CART_NUM, PRODUCT_NUM, ID, PRODUCT_OPTION, PRODUCT_CNT)
+		VALUES (CART_SEQ.NEXTVAL, #{productNum}, #{id}, #{productOption}, #{productCnt} )
+	</insert>
+	
+	
+	<update id="updateCart" >
+		UPDATE CART
+		SET PRODUCT_OPTION = #{productOption},
+			PRODUCT_CNT = #{productCnt}
+		WHERE CART_NUM = #{cartNum}  
+	</update>
+	
+	
+	<delete id="deleteCart" parameterType="int" >
+		DELETE FROM CART
+		WHERE CART_NUM = #{cartNum}
+	</delete>
+	
+	<delete id="deleteCartSoldout" >
+		DELETE FROM CART
+		WHERE CART_NUM = 
+		(SELECT CART_NUM FROM VW_CART WHERE CNT &lt;= 0 AND ID = #{ID})
+	</delete>
+	
+	<select id="cartCheck" parameterType="cart" resultType="cart">
+		SELECT * FROM CART
+		WHERE ID = #{id}
+		AND PRODUCT_NUM = #{productNum}
+		AND PRODUCT_OPTION = #{productOption}
+	</select>
+	
+	<select id="getOneCart" parameterType="int" resultType="cart">
+		SELECT * FROM VW_CART
+		WHERE CART_NUM = #{cartNum}
+	</select>
+</mapper>
+
+
+
+
+
+

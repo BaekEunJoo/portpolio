@@ -1,0 +1,61 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<nav class="sideNav mt-5">
+	<p style="font-size: 1.6em; font-weight: bold;" onclick="location.href='mypage_main.do'">MY PAGE</p>
+	<hr style="border: 0; height: 3px; background: black;">
+	<!-- <h3><a class="mpTitle text-dark" href="#" onclick="location.href='mypage_main.do'">MY PAGE</a></h3> -->
+	<span class="mpName"><i class="bi bi-ticket"></i>&nbsp; MY TICKETS</span>
+	<hr>
+	<ul class="nav flex-column">
+	  <li class="nav-item">
+   	  	<a class="nav-link" id="mp_ticket" onclick="location.href='mp_ticket_ex.do'">티켓 예매 목록</a>
+      	<ul class="nav flex-column" style="font-size: 0.8em; margin-left:25px;">
+      		<li class="nav-item">
+      			<a class="nav-link" id="mp_ticket_ex" href="#" onclick="location.href='mp_ticket_ex.do'">전시 티켓</a>
+      		</li>
+      		<li class="nav-item">
+      			<a class="nav-link" id="mp_ticket_le" href="#" onclick="location.href='mp_ticket_le.do'">교육 티켓</a>
+      		</li>
+      	</ul>
+	  </li>
+	</ul>
+	<br><br>
+	
+	<span class="mpName"><i class="bi bi-bag"></i>&nbsp; MY SHOPPING</span>
+	<hr>
+	<ul class="nav flex-column" style="margin-bottom: 50px;">
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_order" onclick="location.href='mp_order_online.do'">주문내역</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_return" onclick="location.href='mp_return.do'">취소/반품 내역</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_wishlist" onclick="location.href='getWishList.do'">위시리스트</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_addr" onclick="location.href='mp_addrHome.do'">배송지관리</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_review" onclick="location.href='mp_reviewWrite.do'">고객리뷰</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_productFaq" onclick="location.href='mp_productFaq.do'">상품문의</a>
+	  </li>
+	</ul>
+	
+	<span class="mpName"><i class="bi bi-info-circle"></i>&nbsp; MY INFO</span>
+	<hr>
+	<ul class="nav flex-column" style="margin-bottom: 50px;">
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_grade" onclick="location.href='mp_grade.do'">나의 회원등급</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_faq" onclick="location.href='mp_faq.do'">나의 문의</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" href="#" id="mp_updateInfo" onclick="location.href='mp_checkPwd.do'">개인정보 변경/탈퇴</a>
+	  </li>
+	</ul>
+</nav>

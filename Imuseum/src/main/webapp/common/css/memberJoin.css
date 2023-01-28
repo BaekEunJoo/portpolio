@@ -1,0 +1,180 @@
+@charset "UTF-8";
+
+@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+	body ul{
+		list-style-type: none;
+	}
+	body img{
+		display: inline-block;
+	    border: 0;
+	    vertical-align: top;
+	    max-width: 100%;	
+	}
+	#noweb {
+		color: #949494;
+		font-size: 0.9em;
+		padding-left: 20%;
+		margin: auto 0;
+	}
+	
+	.howto {
+		color: #949494;
+	}
+	.visual{
+		width:100%;
+		overflow:hidden;
+		height:40rem;
+	}
+	.container2{
+		width: 80rem;
+	    padding: 5rem 0 9.375rem;
+	    margin: 0 auto;	
+	}
+	.visual.membershipinfo{
+		background: url("https://www.daelimmuseum.org/img/visual-membershipinfo.4ad26792.png") no-repeat;
+	    background-position: center;
+	    background-size: cover;
+	    height: 39.375rem;
+	    filter: brightness(0.5);
+	}
+	.visual-content h5{
+		font-size: 2.75rem;
+	    font-weight: 500;
+	    line-height: 1.36;
+	    letter-spacing: -0.06875rem;
+	    text-align: center;
+	    color: white;
+	    display:block;
+	}	
+	.visual-content{
+	    position: absolute;
+	    top: 20.0625rem;
+	    left: 50%;
+	    width: 80rem;
+	    margin-left: -40rem;
+	    padding: 9.875rem 0 0;	
+	}
+	.visual-content ul{	    
+	    display: flex;
+	    justify-content: space-between;			    
+	    margin: 0;
+	    padding:0;
+	}
+	.visual-content ul li{
+		margin-top: 5rem;
+		width: 15.375rem;
+	    text-align: center;
+	}	
+	
+	.visual-content ul li p{
+		font-size: 1.75rem;
+	    font-weight: 500;
+	    line-height: 1.07;
+	    letter-spacing: -0.04375rem;
+	    color: #fff;	
+		display: block;
+	    margin-block-start: 1em;
+	    margin-block-end: 1em;
+	    margin-inline-start: 0px;
+	    margin-inline-end: 0px;	    
+	}
+	.visual-content ul li span{
+		margin-top: 0.625rem;
+	    font-size: 1.25rem;
+	    font-weight: 300;
+	    line-height: 1.5;
+	    letter-spacing: -0.03125rem;
+	    color: #fff;
+	}
+	.propose-area{
+		padding: 1.25rem 0 5rem;
+	    border-bottom: 1px solid #ddd;
+	    display: flex;
+	    justify-content: center;		
+	}
+	.propose-area .btn-area{
+		width: 18.75rem;
+		text-align: center;
+	}
+	.btn-group .btn-area button {
+	    display: inline-block;
+	    min-width: 16.875rem;
+	    height: 3.75rem;
+	    padding: 0 0.625rem 0;
+	    text-align: center;
+	    letter-spacing: -0.04063rem;
+	    line-height: 3rem;
+	}
+	.btn-area button{
+		background: #111;
+    	color: #fff;		
+	}
+	.normal-area{
+	    margin-top: 2.5rem;
+	}
+	.normal-area h3{
+	    display: inline-block;
+	    font-size: 1.875rem;
+	    line-height: 1.33;
+	    letter-spacing: -0.04688rem;	    
+	}	
+	.content-area {
+		margin-top: 1.5rem;
+	}
+	ul.col-divide-area{
+		display:flex;
+		flex-direction: column;
+	}
+	ul.col-divide-area li{
+	    display: flex;
+	    border-bottom: 1px solid #ddd;
+	    padding: 3.5rem 0 5rem;	    
+	}
+	ul.col-divide-area li img{
+	    margin-right: 6.875rem;
+	    width: 18.75rem;
+	    height: 18.75rem;
+	    background-color: #f2f2f2;
+	    border-radius: 9.375rem;
+	}
+	dl.titleAndList{
+		margin-right: 1.75rem;
+	    width: 25.875rem;
+	    height: 16.375rem;		
+	}
+	dl.titleAndList dt{
+		margin-bottom: 1rem;
+	    font-size: 2.25rem;
+	    font-weight: 500;
+	    line-height: 1.11;
+	    letter-spacing: -0.0625rem;
+	}
+	dl.titleAndList dd{
+		padding-left: 0.625rem;
+	    text-indent: -0.625rem;
+	    font-size: 1rem;
+	    font-weight: 200;
+	    line-height: 1.75;
+	    letter-spacing: -0.025rem;
+	    color: #666;
+	}
+	.cotent-area {
+	    margin-top: 2.7rem;
+	}
+	
+	.cotent-area st{
+	    margin-top: 1.875rem;
+	}
+	ul.detail-info-list li::before{
+		content: "*";
+		padding-right:10px;
+	}
+	.ul.detail-info-list li{
+	    position: relative;
+	    padding-left: 0.625rem;
+	    font-size: 1rem;
+	    font-weight: 200;
+	    line-height: 1.88;
+	    letter-spacing: -0.025rem;
+	    color: #666;
+	}

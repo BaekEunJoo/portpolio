@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.Imuseum.qnaBoard.dao.QnaBoardDAO">
+
+	<select id ="getQnaBoard" parameterType="string" resultType="qnaBoard">
+		SELECT M.MENU_NAME,Q.*,C.CATE_NAME,S.STATUS_VALUE
+		FROM QNA Q, QNA_CATEGORY C, 
+		     QNA_MENU M,QNA_STATUS S
+		WHERE q.question_category = c.question_category
+		AND C.MENU_IDX = m.menu_idx
+		AND Q.STATUS = S.STATUS
+		AND Q.QNA_IDX = #{qnaIdx}
+	</select>	
+	
+	<select id="getTotalCountFromQnaBoard" parameterType="string" resultType="int">
+		SELECT COUNT(*) 
+		FROM (  
+				SELECT M.MENU_NAME,Q.*,C.CATE_NAME,S.STATUS_VALUE
+						FROM QNA Q, QNA_CATEGORY C, 
+						     QNA_MENU M,QNA_STATUS S
+						WHERE q.question_category = c.question_category
+						AND C.MENU_IDX = m.menu_idx
+						AND Q.STATUS = S.STATUS
+				        AND Q.ID = #{id}
+		)
+	</select>
+	
+	<select id="getQnaBoardListById" parameterType="com.spring.Imuseum.qnaBoard.QnaPagination" resultType="qnaBoard">
+		SELECT *
+		    FROM(SELECT ROWNUM RN, A.*
+		            FROM(
+				        SELECT M.MENU_NAME,Q.*,C.CATE_NAME,S.STATUS_VALUE
+						FROM QNA Q, QNA_CATEGORY C, 
+						     QNA_MENU M,QNA_STATUS S
+						WHERE q.question_category = c.question_category
+						AND C.MENU_IDX = m.menu_idx
+						AND Q.STATUS = S.STATUS
+						AND Q.ID = #{id}
+						ORDER BY Q.QNA_IDX DESC
+		            ) A
+		        )
+		WHERE RN BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<select id="getTotalCountByStatus" parameterType="string" resultType="int">
+		SELECT COUNT(*) 
+		FROM (  
+				SELECT M.MENU_NAME,Q.*,C.CATE_NAME,S.STATUS_VALUE
+						FROM QNA Q, QNA_CATEGORY C, 
+						     QNA_MENU M,QNA_STATUS S
+						WHERE q.question_category = c.question_category
+						AND C.MENU_IDX = m.menu_idx
+						AND Q.STATUS = S.STATUS
+				        AND Q.STATUS = #{status}
+		)
+	</select>	
+	<select id ="getQnaBoardList" parameterType="com.spring.Imuseum.qnaBoard.QnaPagination" resultType="qnaBoard">
+			SELECT *
+		    	FROM(SELECT ROWNUM RN, A.*
+			            FROM(
+					        SELECT M.MENU_NAME,Q.*,C.CATE_NAME,S.STATUS_VALUE
+							FROM QNA Q, QNA_CATEGORY C, 
+							     QNA_MENU M,QNA_STATUS S
+							WHERE q.question_category = c.question_category
+							AND C.MENU_IDX = m.menu_idx
+							AND Q.STATUS = S.STATUS
+							AND Q.STATUS = #{status}
+							ORDER BY Q.QNA_IDX DESC
+			            ) A
+		        	)
+		WHERE RN BETWEEN #{begin} AND #{end}	
+	</select>	
+	
+	<select id="getQnaAnswer" parameterType="int" resultType = "qnaReply">
+		SELECT A.*
+		FROM QNA Q, QNA_ANSWER A
+		WHERE Q.QNA_IDX = A.QNA_IDX
+		AND A.QNA_IDX = #{qnaIdx}
+	</select>
+	
+	<insert id="insertQnaBoard" parameterType="qnaBoard">
+	INSERT INTO QNA
+		(QNA_IDX,
+		MENU_CATEGORY,
+		QUESTION_CATEGORY,
+		TITLE,
+		CONTENTS,
+		FILE_IDX,
+		REGDATE,
+		ID)
+			VALUES(
+			QNA_SEQ.NEXTVAL,
+			#{menuCategory},	
+			#{questionCategory},
+			#{title},
+			#{contents},
+			#{fileIdx},
+			SYSDATE,
+			#{id}
+			)
+	</insert>
+	
+	<insert id="insertQnaBoardWithoutFile" parameterType="qnaBoard">
+	INSERT INTO QNA
+		(QNA_IDX,
+		MENU_CATEGORY,
+		QUESTION_CATEGORY,
+		TITLE,
+		CONTENTS,
+		REGDATE,
+		ID)
+			VALUES(
+			QNA_SEQ.NEXTVAL,
+			#{menuCategory},	
+			#{questionCategory},
+			#{title},
+			#{contents},
+			SYSDATE,
+			#{id}
+			)
+	</insert>
+	<insert id="insertQnaAnswer" parameterType="qnaReply">
+		INSERT INTO QNA_ANSWER
+		(ANSWER_IDX,QNA_IDX,CONTENT,REGDATE)
+		VALUES(
+		    	(SELECT MAX((NVL(ANSWER_IDX,0) + 1)) AS ANSWER_IDX FROM QNA_ANSWER),
+		    	#{qnaIdx},
+		    	#{content},
+		    	SYSDATE)
+	</insert>
+	<update id="updateStatus" parameterType="int">
+	    UPDATE QNA SET STATUS = 2
+  			WHERE QNA_IDX = #{qnaIdx}
+	</update>
+	
+	<delete id="deleteQnaBoard" parameterType="int">
+		DELETE FROM QNA WHERE QNA_IDX = #{qnaIdx}
+	</delete>
+</mapper>
+
+
+
+
+

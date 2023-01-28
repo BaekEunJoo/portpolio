@@ -1,0 +1,62 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<div class="col-2" style="text-align: center;">
+	<p style="font-size: 1.6em; font-weight: bold; text-align: center;">ADMIN PAGE</p>
+	<hr style="border: 0; height: 3px; background: black;">
+	<span class="amName"><i class="bi bi-people-fill"></i> 회원관리</span>
+	<hr>
+	
+	<ul class="nav flex-column">
+		<li class="nav-item">
+			<a class="nav-link" id="am_member" href="memberAdmin.do">회원관리</a>
+	  	</li>
+	</ul>
+	<br><br>
+	
+	<span class="amName"><i class="bi bi-easel2"></i> 전시 관리</span>
+	<hr>
+	<ul class="nav flex-column">
+		<li class="nav-item">
+		  <a class="nav-link" href="exAdmin.do" id="am_excenter">전시관리</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link" href="exRevPersonal.do" id="am_exticket">예매목록</a>
+		</li>
+	</ul>
+	<br><br>
+	<span class="amName"><i class="bi bi-book"></i> 교육 프로그램 관리</span>
+	<hr>
+	<ul class="nav flex-column">
+		<li class="nav-item">
+		  <a class="nav-link" href="learnAdmin.do" id="am_learncenter">프로그램 관리</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link" href="learnRevPersonal.do" id="am_learnticket">예매목록</a>
+		</li>
+	</ul>
+	<br><br>
+	<span class="amName"><i class="bi bi-cart4"></i> 쇼핑몰 관리</span>
+	<hr>
+	<ul class="nav flex-column">
+		<li class="nav-item">
+		  <a class="nav-link" href="productAdmin.do" id="am_pdt">상품관리</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link" href="productQna.do" id="am_qr">문의/후기</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link" href="productOrder.do" id="am_ship">주문배송</a>
+		</li>
+		<li class="nav-item">
+		  <a class="nav-link" href="productSale.do" id="am_sale">매출현황</a>
+		</li>
+	</ul>
+	<br><br>
+	<span class="amName"><i class="bi bi-card-text"></i></i> 문의관리</span>
+	<hr>
+	<ul class="nav flex-column" style="padding-bottom : 100px;">
+		<li class="nav-item">
+		  <a class="nav-link" href="qnaAdmin.do?statusIdx=1" id="am_qa">1:1 문의</a>
+		</li>
+	</ul>
+</div>

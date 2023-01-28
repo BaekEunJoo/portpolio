@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.Imuseum.ticket.dao.TicketDAO">
+
+
+	<!-- 티켓 권종보기 -->
+	<select id="getTicketType" parameterType="ticketType" resultType="ticketType">
+		SELECT * FROM 
+		EXHIBITION_TYPE
+	</select>
+	
+	<!-- 전시티켓 예매 -->
+	<insert id="insertExTicket" parameterType="exhibitionTicket">
+		INSERT INTO EXHIBITION_REV (REV_NUM, EXH_NUM, ID, EXH_NAME, REV_DATE, 
+		ADULT, TOTALPRICE, REGDATE, TEENS, CHILD, NAME, CARD_NUM, CARD_NAME, APPROVAL_NUM)
+		VALUES(#{revNum},#{exhNum},#{id},#{exhName},#{revDate},#{adult},#{totalprice},SYSDATE,
+		#{teens},#{child},#{name},#{cardNum},#{cardName},#{approvalNum})
+	</insert>
+	
+	<!-- 교육티켓 예매 -->
+	<insert id="insertLearnTicket" parameterType="learnTicket">
+		INSERT INTO LEARN_REV (REV_NUM, ID, LEARN_IDX, TITLE, REV_DATE, SUBSCRIBER, 
+		TOTALPRICE, PAYMENT, PLACE, TIME, REGDATE, NAME, CARD_NUM, CARD_NAME, APPROVAL_NUM)
+		VALUES(#{revNum},#{id},#{learnIdx},#{title},#{revDate},#{subscriber},#{totalprice},#{payment},#{place},#{time}, SYSDATE,
+		#{name},#{cardNum},#{cardName},#{approvalNum})
+	</insert>
+	
+	<!-- 교육티켓 인원수 확인 -->
+	<select id="getTicketmember" parameterType="learnTicket" resultType="learnTicket">
+		SELECT LEARN_IDX, SUM(SUBSCRIBER) AS SUM, REV_DATE
+		FROM LEARN_REV
+		WHERE LEARN_IDX = #{learnIdx} AND STATUS = '결제완료'
+		GROUP BY LEARN_IDX, REV_DATE
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--===================== 관리자 ============================== -->
+	<!-- 전시티켓예매목록 보기 -->
+<!-- 	<select id="getExhibitionTicket" parameterType="exhibitionTicket" resultType="exhibitionTicket"> -->
+<!-- 		SELECT * FROM  -->
+<!-- 		EXHIBITION_REV -->
+<!-- 		ORDER BY REV_NUM DESC -->
+<!-- 	</select> -->
+	<select id="ExhibitionTicketCount" resultType="int">
+	SELECT COUNT(*) AS CNT FROM VW_EXHIBITION_SNS
+	</select>
+	<select id="ExhibitionTicketTotal" resultType="int">
+	SELECT SUM(TOTALPRICE) AS TOTP FROM EXHIBITION_REV
+	</select>
+	<select id="ExhibitionTicketCancel" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0)
+	FROM EXHIBITION_REV
+	WHERE 1=1  
+	<if test="searchCondition == 'NAME'">
+		AND NAME LIKE '%'|| #{searchKeyword} ||'%' 
+	</if>
+	<if test="searchCondition == 'REVNUM'">
+		AND REV_NUM LIKE '%'|| #{searchKeyword} ||'%' 
+	</if>
+	<if test="searchCondition == 'TITLE'">
+		AND EXH_NAME LIKE '%'|| #{searchKeyword} ||'%' 
+	</if>
+	AND STATUS = '예매취소'
+	</select>
+	<select id="getExhibitionTicket" parameterType="map" resultType="exhibitionTicket">
+		SELECT *
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS E_NUM,
+		e.* FROM (SELECT *
+		FROM VW_EXHIBITION_SNS
+		ORDER BY REV_NUM ASC) e  
+		) 
+		WHERE 1=1  
+		<if test="searchCondition == 'NAME'">
+			AND NAME LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'REVNUM'">
+			AND REV_NUM LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'TITLE'">
+			AND EXH_NAME LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		AND E_NUM BETWEEN #{begin} AND #{end}
+		ORDER BY REV_NUM DESC
+	</select>
+	<select id="getExhibitionTicketSearch" parameterType="map" resultType="exhibitionTicket">
+		SELECT *
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS E_NUM,
+		e.* FROM (SELECT *
+		FROM VW_EXHIBITION_SNS
+		ORDER BY REV_NUM ASC) e  
+		) 
+		WHERE 1=1  
+		<if test="searchCondition == 'NAME'">
+			AND NAME LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'REVNUM'">
+			AND REV_NUM LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'TITLE'">
+			AND EXH_NAME LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		ORDER BY REV_NUM DESC
+	</select>
+	
+	<!-- 오늘 전시티켓예매목록 보기 -->
+	<select id="ExhibitionTicketCountToday" resultType="int">
+	SELECT NVL(COUNT(*), 0) FROM EXHIBITION_REV
+	WHERE TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd') 
+	</select>
+	<select id="ExhibitionTicketTotalToday" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0) FROM VW_EXHIBITION_SNS
+	WHERE TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd')
+	</select>
+	<select id="ExhibitionTicketCancelToday" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0)
+	FROM EXHIBITION_REV
+	WHERE STATUS = '예매취소'
+	AND TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd') 
+	</select>
+	<select id="getExhibitionTicketToday" parameterType="exhibitionTicket" resultType="exhibitionTicket">
+		SELECT *
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS E_NUM,
+		e.* FROM (SELECT *
+		FROM VW_EXHIBITION_SNS
+		ORDER BY REV_NUM ASC) e  
+		) 
+		WHERE TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd')
+		AND E_NUM BETWEEN #{begin} AND #{end}
+		ORDER BY REV_NUM DESC
+	</select>
+	
+	<!-- 일주일 전시티켓예매목록 보기 -->
+	<select id="ExhibitionTicketCountWeek" resultType="int">
+	SELECT NVL(COUNT(*), 0) FROM VW_EXHIBITION_SNS
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="ExhibitionTicketTotalWeek" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0) FROM EXHIBITION_REV
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="ExhibitionTicketCancelWeek" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0)
+	FROM EXHIBITION_REV
+	WHERE STATUS = '예매취소'
+	AND REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="getExhibitionTicketWeek" parameterType="exhibitionTicket" resultType="exhibitionTicket">
+		SELECT *
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS E_NUM,
+		e.* FROM (SELECT *
+		FROM VW_EXHIBITION_SNS
+		ORDER BY REV_NUM ASC) e  
+		)
+		WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+		AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+		AND E_NUM BETWEEN #{begin} AND #{end}
+		ORDER BY REV_NUM DESC 
+	</select>
+	
+	<!-- 한달 전시티켓예매목록 보기 -->
+	<select id="ExhibitionTicketCountMonth" resultType="int">
+	SELECT NVL(COUNT(*), 0) FROM VW_EXHIBITION_SNS
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="ExhibitionTicketTotalMonth" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE),0) FROM EXHIBITION_REV
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="ExhibitionTicketCancelMonth" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0)
+	FROM EXHIBITION_REV
+	WHERE STATUS = '예매취소'
+	AND REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="getExhibitionTicketMonth" parameterType="exhibitionTicket" resultType="exhibitionTicket">
+		SELECT *
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS E_NUM,
+		e.* FROM (SELECT *
+		FROM VW_EXHIBITION_SNS
+		ORDER BY REV_NUM ASC) e  
+		)
+		WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+		AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+		AND E_NUM BETWEEN #{begin} AND #{end}
+		ORDER BY REV_NUM DESC 
+	</select>
+	
+	<!-- 날짜검색 전시티켓예매목록 보기 -->
+	<select id="getExhibitionTicketSelect" parameterType="map" resultType="exhibitionTicket">
+		SELECT * FROM VW_EXHIBITION_SNS
+		WHERE REGDATE BETWEEN TO_DATE(#{regdate1},'yyyy-mm-dd') 
+		AND TO_DATE(#{regdate2},'yyyy-mm-dd')+1
+		ORDER BY REV_NUM DESC 
+	</select>
+	<select id="getExhibitionTicketCancle" resultType="int">
+		SELECT NVL(SUM(TOTALPRICE), 0)
+		FROM EXHIBITION_REV
+		WHERE REGDATE BETWEEN TO_DATE(#{regdate1},'yyyy-mm-dd') 
+		AND TO_DATE(#{regdate2},'yyyy-mm-dd')+1
+		AND STATUS = '예매취소'
+	</select>
+	
+	
+	<!-- 전시티켓 상태변경 -->
+	<update id="updateExTicket" parameterType="exhibitionTicket">
+		UPDATE EXHIBITION_REV 
+		SET STATUS = '사용완료' WHERE REV_NUM = #{revNum} 
+	</update>
+	
+	<select id="getExTicketOne" parameterType="exhibitionTicket" resultType="exhibitionTicket">
+		SELECT * FROM
+		EXHIBITION_REV
+		WHERE REV_NUM = #{revNum}
+	</select>
+	
+	<select id="learnTicketCount" resultType="int">
+	SELECT COUNT(*) AS CNT FROM VW_LEARN_SNS
+	</select>
+	<select id="learnTicketTotal" resultType="int">
+	SELECT SUM(TOTALPRICE) AS TOTP FROM VW_LEARN_SNS
+	</select>
+	<select id="learnTicketCancel" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0)
+	FROM VW_LEARN_SNS
+	WHERE 1=1  
+	<if test="searchCondition == 'NAME'">
+		AND NAME LIKE '%'|| #{searchKeyword} ||'%' 
+	</if>
+	<if test="searchCondition == 'REVNUM'">
+		AND REV_NUM LIKE '%'|| #{searchKeyword} ||'%' 
+	</if>
+	<if test="searchCondition == 'TITLE'">
+		AND TITLE LIKE '%'|| #{searchKeyword} ||'%' 
+	</if>
+	AND STATUS = '예매취소'
+	</select>
+	<select id="getLearnTicket" parameterType="learnTicket" resultType="learnTicket">
+		SELECT *
+        FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS L_NUM,
+		L.* FROM (SELECT *
+		FROM VW_LEARN_SNS
+		ORDER BY REV_NUM ASC) L  
+		) 
+		WHERE 1=1  
+		<if test="searchCondition == 'NAME'">
+			AND NAME LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'REVNUM'">
+			AND REV_NUM LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'TITLE'">
+			AND TITLE LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		AND L_NUM BETWEEN #{begin} AND #{end}
+		ORDER BY REV_NUM DESC
+	</select>
+	<select id="getLearnTicketSearch" parameterType="map" resultType="learnTicket">
+		SELECT *
+		FROM VW_LEARN_SNS
+		WHERE 1=1  
+		<if test="searchCondition == 'NAME'">
+			AND NAME LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'REVNUM'">
+			AND REV_NUM LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		<if test="searchCondition == 'TITLE'">
+			AND TITLE LIKE '%'|| #{searchKeyword} ||'%' 
+		</if>
+		ORDER BY REV_NUM DESC
+	</select>
+	
+	
+	<!-- 오늘 교육티켓예매목록 보기 -->
+	<select id="learnTicketCountToday" resultType="int">
+	SELECT NVL(COUNT(*), 0) AS CNT FROM VW_LEARN_SNS
+	WHERE TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd')
+	</select>
+	<select id="learnTicketTotalToday" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE),0) AS TOTP FROM VW_LEARN_SNS
+	WHERE TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd')
+	</select>
+	<select id="learnTicketCancelToday" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0)
+	FROM VW_LEARN_SNS
+	WHERE TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd')
+	AND STATUS = '예매취소'
+	</select>
+	<select id="getLearnTicketToday" parameterType="learnTicket" resultType="learnTicket">
+		SELECT *
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS L_NUM,
+		L.* FROM (SELECT *
+		FROM VW_LEARN_SNS
+		ORDER BY REV_NUM ASC) L  
+		) 
+		WHERE TO_CHAR(REGDATE,'yyyy-mm-dd') = TO_CHAR(SYSDATE,'yyyy-mm-dd')
+		AND L_NUM BETWEEN #{begin} AND #{end}
+		ORDER BY REV_NUM DESC
+	</select>
+	
+	<!-- 일주일 교육티켓예매목록 보기 -->
+	<select id="learnTicketCountWeek" resultType="int">
+	SELECT NVL(COUNT(*), 0) AS CNT FROM VW_LEARN_SNS
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="learnTicketTotalWeek" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE),0) AS TOTP FROM VW_LEARN_SNS
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="learnTicketCancelWeek" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0)
+	FROM VW_LEARN_SNS
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	AND STATUS = '예매취소'
+	</select>
+	<select id="getLearnTicketWeek" parameterType="learnTicket" resultType="learnTicket">
+		SELECT *
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS L_NUM,
+		L.* FROM (SELECT *
+		FROM VW_LEARN_SNS
+		ORDER BY REV_NUM ASC) L  
+		) 
+		WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-7,'yyyy-mm-dd') 
+		AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+		AND L_NUM BETWEEN #{begin} AND #{end}
+		ORDER BY REV_NUM DESC 
+	</select>
+	
+	<!-- 한달 교육티켓예매목록 보기 -->
+	<select id="learnTicketCountMonth" resultType="int">
+	SELECT NVL(COUNT(*), 0) AS CNT FROM VW_LEARN_SNS
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="learnTicketTotalMonth" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE),0) AS TOTP FROM VW_LEARN_SNS
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	</select>
+	<select id="learnTicketCancelMonth" resultType="int">
+	SELECT NVL(SUM(TOTALPRICE), 0)
+	FROM VW_LEARN_SNS
+	WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+	AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+	AND STATUS = '예매취소'
+	</select>
+	<select id="getLearnTicketMonth" parameterType="learnTicket" resultType="learnTicket">
+		SELECT * 
+		FROM (SELECT ROW_NUMBER() OVER (ORDER BY REV_NUM DESC) AS L_NUM,
+		L.* FROM (SELECT *
+		FROM VW_LEARN_SNS
+		ORDER BY REV_NUM ASC) L  
+		) 
+		WHERE REGDATE BETWEEN TO_CHAR(SYSDATE-30,'yyyy-mm-dd') 
+		AND TO_CHAR(SYSDATE+1,'yyyy-mm-dd')
+		AND L_NUM BETWEEN #{begin} AND #{end}
+		ORDER BY REV_NUM DESC 
+	</select>
+	
+	<!-- 날짜검색 교육티켓예매목록 보기 -->
+	<select id="getLearnTicketSelect" parameterType="map" resultType="learnTicket">
+		SELECT * FROM
+		VW_LEARN_SNS
+		WHERE REGDATE BETWEEN TO_DATE(#{regdate1},'yyyy-mm-dd') 
+		AND TO_DATE(#{regdate2},'yyyy-mm-dd')+1
+		ORDER BY REV_NUM DESC 
+	</select>
+	<select id="getLearnTicketCancle" resultType="int">
+		SELECT NVL(SUM(TOTALPRICE), 0)
+		FROM LEARN_REV
+		WHERE REGDATE BETWEEN TO_DATE(#{regdate1},'yyyy-mm-dd') 
+		AND TO_DATE(#{regdate2},'yyyy-mm-dd')+1
+		AND STATUS = '예매취소'
+	</select>
+	
+	
+	<!-- 전시티켓 상태변경 -->
+	<update id="updateLearnTicket" parameterType="learnTicket">
+		UPDATE LEARN_REV 
+		SET STATUS = '사용완료' WHERE REV_NUM = #{revNum} 
+	</update>
+	<select id="getLearnTicketOne" parameterType="learnTicket" resultType="learnTicket">
+		SELECT * FROM
+		LEARN_REV
+		WHERE REV_NUM = #{revNum}
+	</select>
+	
+	
+	
+</mapper>
+
+
+
+
+
+

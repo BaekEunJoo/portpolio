@@ -1,0 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<div style="cursor: pointer; text-align: right; margin: 20px; 80px; font-weight: bold; font-size: 0.9em;">
+	<span id="confirmStart" style="margin-right: 20px;">LOGOUT</span>
+	<span onclick="javascript:location.href='moveToAdmin.do'" style="margin-right: 20px;">ADMIN</span>
+	<span onclick="location.href='allNotice.do'" style="margin-right: 20px;">NOTICE</span>
+	<span onclick="location.href='FAQ.do'" style="margin-right: 20px;">FAQ</span>
+</div>
+
+<script 
+	src="/Imuseum/common/js/memberLogout.js"></script>
